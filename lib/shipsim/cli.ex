@@ -24,7 +24,8 @@ defmodule ShipSim.CLI do
 
   def process({file_name}) do
     ShipSim.JSONFetch.fetch(file_name)
-    IO.inspect file_name
+    |> ShipSim.ExtractMap.extract_from_body
+    # IO.inspect file_name
   end
 
   def process(:help) do

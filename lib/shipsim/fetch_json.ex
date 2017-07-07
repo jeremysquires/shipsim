@@ -26,7 +26,7 @@ defmodule ShipSim.JSONFetch do
     # read it into a binary blob
     File.read(file_name)
     |> handle_json
-    |> IO.inspect
+    # |> IO.inspect
     # parse the object and return a JSON structure
     # return the blob, or an error
   end
