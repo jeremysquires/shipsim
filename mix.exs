@@ -31,6 +31,8 @@ defmodule ShipSim.Mixfile do
   # Type "mix help deps" for more examples and options
   # Add {:httpoison, "~> 0.9.0"} to get HTTP REST access
   defp deps do
-    [{:poison, "~> 3.1"}]
+    [{:poison, "~> 3.1"},
+     {:earmark, "~> 1.2.2", only: :dev},
+     {:ex_doc, "~> 0.16.2", only: :dev}]
   end
 end

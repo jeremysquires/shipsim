@@ -1,5 +1,7 @@
 defmodule ShipSim.CLI do
   @moduledoc """
+  Command Line Interface (CLI) for the ShipSim
+  Provides the main() class for an escript command line app
   https://hackernoon.com/elixir-console-application-with-json-parsing-lets-print-to-console-b701abf1cb14
   """
 
@@ -22,12 +24,18 @@ defmodule ShipSim.CLI do
     end
   end
 
+  @doc """
+  Passed a file name, fetch the JSON and extract it into variables
+  """
   def process({file_name}) do
     ShipSim.JSONFetch.fetch(file_name)
     |> ShipSim.ExtractMap.extract_from_body
     # IO.inspect file_name
   end
 
+  @doc """
+  Passed the :help atom, print out help
+  """
   def process(:help) do
   IO.puts """
     Ship Simulator

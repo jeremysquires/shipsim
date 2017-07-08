@@ -4,15 +4,22 @@ defmodule ShipSim do
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ShipSim.hello
-      :world
-
+  Initialize the simulator
   """
-  def hello do
-    :world
+  def initSim do
+    # read json
+    # separate chunks of data per ship
+    # initialize ship listeners
   end
+
+  @doc """
+  Run the simulator
+  """
+  def runSim do
+    # start time slice at the lowest time
+    # move time slice ahead in loop
+    # notify all registered ships
+    # until latest time is encountered
+  end
+
 end
