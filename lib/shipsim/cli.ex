@@ -21,6 +21,7 @@ defmodule ShipSim.CLI do
     case parse do
       {[help: true], _, _} -> :help
       {_, [file_name], _} -> {file_name}
+      {[], [], []} -> :help
     end
   end
 
@@ -40,8 +41,8 @@ defmodule ShipSim.CLI do
   IO.puts """
     Ship Simulator
     - - - - - - - 
-    usage: shipsim <file_name> | -help
-    example: shipsim plato.json
+    usage: shipsim <file_name> | --help
+    example: shipsim test/TestData.json
   """
   end
 
