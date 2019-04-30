@@ -31,11 +31,14 @@ iex -S mix
 
 ## Test
 
+mix test
+
 escript shipsim test/TestData.json
 
 ## References
 
 ### Create New App Using Mix
+
 mix new shipsim --module ShipSim
 
 edit mix.exs and other module files based upon: 

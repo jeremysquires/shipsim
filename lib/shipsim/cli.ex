@@ -5,8 +5,14 @@ defmodule ShipSim.CLI do
   https://hackernoon.com/elixir-console-application-with-json-parsing-lets-print-to-console-b701abf1cb14
   """
 
-  @doc """
+  @doc ~S"""
   Build a classic command line that will be run through the escript processor
+
+    ## doctest
+
+    iex> ShipSim.CLI.main(["--help"])
+    :ok
+  
   """
   def main(args \\ []) do
     parse_args(args)
