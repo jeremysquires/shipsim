@@ -25,19 +25,21 @@ mix escript.build
 
 escript shipsim --help
 
-escript shipsim input.json
+escript shipsim test/TestData.json
 
 iex -S mix
 
-## Journal
+## Test
 
+escript shipsim test/TestData.json
+
+## References
+
+### Create New App Using Mix
 mix new shipsim --module ShipSim
 
 edit mix.exs and other module files based upon: 
 
 [Elixir Console Application](https://hackernoon.com/elixir-console-application-with-json-parsing-lets-print-to-console-b701abf1cb14)
 
-## Test
-
-escript shipsim test/TestData.json
 
