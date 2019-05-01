@@ -6,17 +6,33 @@ defmodule ShipSim do
   @doc """
   Initialize the simulator
   """
-  def initSim do
+  def initSimLoop do
     # read json
-    # separate chunks of data per ship
-    # initialize ship listeners
+    file_name = "test/TestData.json"
+    # TODO: pattern match against :ok and :error
+    {_result, vessels} = ShipSim.JSONFetch.fetch(file_name)
+    # TODO: preprocess all timestamp strings to DateTime objects
+    # start time slice at the lowest time
+    # TODO: find the lowest timestamp
+    lowest_time = "2020-01-01T07:40Z"
+    # spawn ship message listeners
+    Enum.map(vessels,
+      fn vessel ->
+        spawn ShipSim.ShipLoop.ops_loop(%{
+          vessel |
+          :position_index => 0,
+          :current_time => lowest_time,
+        })
+      end
+    )
   end
 
   @doc """
   Run the simulator
   """
   def runSim do
-    # start time slice at the lowest time
+    # initialize all ship processes
+    _ships = ShipSim.initSimLoop()
     # move time slice ahead in loop
     # notify all registered ships
     # until latest time is encountered

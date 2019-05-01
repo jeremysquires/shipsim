@@ -25,6 +25,13 @@ defmodule ShipsimTest do
         |> ShipSim.ExtractMap.extract_vessels_names
       assert result == :ok && length(content) == 3
     end
+
+    test "extracts positions", context do
+      {_, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
+      {result, positions} = ShipSim.ExtractMap.extract_positions_by_vessel(ships, "Vessel 1")
+      assert result == :ok && length(positions) == 8
+    end
+        
   end
 
   describe "ShipSim.DaysRun" do
