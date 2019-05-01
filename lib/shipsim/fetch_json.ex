@@ -17,7 +17,7 @@ defmodule ShipSim.JSONFetch do
   Success case
   """
   def handle_json({:ok, body}) do
-    {:ok, Poison.Parser.parse!(body)}
+    {:ok, Poison.Parser.parse!(body, %{keys: :atoms!})}
   end
 
   @doc """

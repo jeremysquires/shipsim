@@ -4,7 +4,7 @@ defmodule ShipSim.Mixfile do
   def project do
     [app: :shipsim,
      version: "0.1.0",
-     elixir: "~> 1.4",
+     elixir: "~> 1.5",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      escript: [main_module: ShipSim.CLI], #Added escript     
@@ -17,7 +17,7 @@ defmodule ShipSim.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     # add :httpoison to get HTTP REST access
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger, :timex]]
   end
 
   # Dependencies can be Hex packages:
@@ -31,8 +31,9 @@ defmodule ShipSim.Mixfile do
   # Type "mix help deps" for more examples and options
   # Add {:httpoison, "~> 0.9.0"} to get HTTP REST access
   defp deps do
-    [{:poison, "~> 3.1"},
-     {:earmark, "~> 1.2.2", only: :dev},
-     {:ex_doc, "~> 0.16.2", only: :dev}]
+    [{:poison, "~> 4.0"},
+     {:earmark, "~> 1.3.2", only: :dev},
+     {:ex_doc, "~> 0.20.2", only: :dev},
+     {:timex, "~> 3.0"}]
   end
 end
