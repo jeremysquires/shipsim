@@ -40,7 +40,7 @@ defmodule ShipsimTest do
 
     test "output overall distance and speed for all ships", context do
       {read_result, vessels} = ShipSim.JSONFetch.fetch(context[:file_name])
-      runs = ShipSim.DaysRun.days_run_out(vessels)
+      _runs = ShipSim.DaysRun.days_run_out(vessels)
       assert read_result == :ok
     end
   end

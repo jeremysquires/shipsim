@@ -1,8 +1,3 @@
-defmodule Math do
-	def abs(a) when a < 0, do: -1*a
-	def abs(a) when a >= 0, do: a
-end
-
 defmodule ShipSim.DaysRun do
   def days_run(vessels) do
     Enum.map(vessels["vessels"],
@@ -15,7 +10,7 @@ defmodule ShipSim.DaysRun do
           fn position, acc ->
             %{"timestamp" => timestamp, "x" => x, "y" => y} = position
             {last_distance, {lastx, lasty}, last_delta, last_time} = acc
-            new_distance = last_distance + ShipSim.DaysRun.distance(lastx, lasty, x, y)
+            new_distance = last_distance + Segment.length(lastx, lasty, x, y)
             new_delta = last_delta + delta_time(last_time, timestamp)
             {new_distance, {x,y}, new_delta, timestamp}
           end
@@ -51,22 +46,6 @@ defmodule ShipSim.DaysRun do
       end  
     )
   end
-
-  def distance(x1, y1, x2, y2) do
-    :math.sqrt(
-      :math.pow(Math.abs(x1 - x2), 2) +
-      :math.pow(Math.abs(y1 - y2), 2)
-    )
-  end  
-  def distance({x1, y1}, {x2, y2}) do
-    ShipSim.DaysRun.distance(x1, y1, x2, y2)
-  end  
-  def distance({{x1, y1}, {x2, y2}}) do
-    ShipSim.DaysRun.distance(x1, y1, x2, y2)
-  end  
-  def distance([{x1, y1}, {x2, y2}]) do
-    ShipSim.DaysRun.distance(x1, y1, x2, y2)
-  end  
 
   def delta_time(tstring1, tstring2) do
     {:ok, dt1} = Timex.parse(tstring1, "{ISO:Extended:Z}")
