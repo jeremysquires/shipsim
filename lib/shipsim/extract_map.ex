@@ -12,13 +12,22 @@ defmodule ShipSim.ExtractMap do
        end
      end)
   """
-  def extract_from_body(map) do
+
+  def output_content(map) do
     {:ok, body} = map
     all = fn :get, data, next -> Enum.map(data, next) end
-    extract_vessels_names = get_in(body, ["vessels", all, "name"])
-    IO.inspect extract_vessels_names
     extract_vessels = get_in(body, ["vessels", all])
     IO.inspect extract_vessels
+  end
 
+  def extract_vessels_names(map) do
+    {:ok, body} = map
+    all = fn :get, data, next -> Enum.map(data, next) end
+    vessels_names = get_in(body, ["vessels", all, "name"])
+    if (length(vessels_names) > 0) do
+      {:ok, vessels_names}
+    else
+      {:err, "no vessels found"}
+    end
   end
 end
