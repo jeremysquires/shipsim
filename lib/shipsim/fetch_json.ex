@@ -15,9 +15,12 @@ defmodule ShipSim.JSONFetch do
 
   @doc """
   Success case
+
+  NOTE: poison options are now required, but %{keys: :atoms!}
+  produces an error, so pass empty options, default keys are reused
   """
   def handle_json({:ok, body}) do
-    {:ok, Poison.Parser.parse!(body, %{keys: :atoms!})}
+    {:ok, Poison.Parser.parse!(body, %{})}
   end
 
   @doc """
