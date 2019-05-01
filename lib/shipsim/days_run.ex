@@ -5,40 +5,52 @@ end
 
 defmodule ShipSim.DaysRun do
   def days_run(vessels) do
-    Enum.each(vessels["vessels"], fn vessel ->
-      vesselname = vessel["name"]
-      positions = vessel["positions"]
-      [firstposition|lastpositions] = positions
-      firsttime = firstposition["timestamp"]
-      firstx = firstposition["x"]
-      firsty = firstposition["y"]
-      full_days_run = Enum.reduce(lastpositions,
-        {0, {firstx,firsty}, 0, firsttime},
-        fn position, acc ->
-          timestamp = position["timestamp"]
-          x = position["x"]
-          y = position["y"]
-          last_distance = elem(acc, 0)
-          last_point = elem(acc, 1)
-          last_delta = elem(acc, 2)
-          last_time = elem(acc, 3)
-          lastx = elem(last_point, 0)
-          lasty = elem(last_point, 1)
-          new_distance = last_distance + ShipSim.DaysRun.distance(lastx, lasty, x, y)
-          new_delta = last_delta + delta_time(last_time, timestamp)
-          {new_distance, {x,y}, new_delta, timestamp}
-        end
-      )
-      IO.puts "Vessel #{inspect vesselname} day's run:"
-      distance_run = elem(full_days_run, 0)
-      IO.puts "Run: #{inspect distance_run} km"
-      hours_run = elem(full_days_run, 2) / 60 / 60
-      IO.puts "Time: #{inspect hours_run} hours"
-      speed = distance_run / hours_run
-      IO.puts "Speed: #{inspect speed} km/hr"
-    end
+    Enum.map(vessels["vessels"],
+      fn vessel ->
+        %{"name" => vesselname, "positions" => positions} = vessel
+        [firstposition|lastpositions] = positions
+        %{"timestamp" => firsttime, "x" => firstx, "y" => firsty} = firstposition
+        full_days_run = Enum.reduce(lastpositions,
+          {0, {firstx,firsty}, 0, firsttime},
+          fn position, acc ->
+            %{"timestamp" => timestamp, "x" => x, "y" => y} = position
+            {last_distance, {lastx, lasty}, last_delta, last_time} = acc
+            new_distance = last_distance + ShipSim.DaysRun.distance(lastx, lasty, x, y)
+            new_delta = last_delta + delta_time(last_time, timestamp)
+            {new_distance, {x,y}, new_delta, timestamp}
+          end
+        )
+        distance_run = elem(full_days_run, 0)
+        hours_run = elem(full_days_run, 2) / 60 / 60
+        speed = distance_run / hours_run
+        %{
+          :vesselname => vesselname,
+          :distance_run => distance_run,
+          :hours_run => hours_run,
+          :speed => speed
+        }
+      end
     )
   end  
+
+  def days_run_out(vessels) do
+    results = ShipSim.DaysRun.days_run(vessels)
+    Enum.each(results,
+      fn vessel ->
+        %{
+          :vesselname => vesselname,
+          :distance_run => distance_run,
+          :hours_run => hours_run,
+          :speed => speed
+        } = vessel
+        IO.puts ""
+        IO.puts "Vessel #{inspect vesselname} day's run:"
+        IO.puts "Run: #{inspect distance_run} km"
+        IO.puts "Time: #{inspect hours_run} hours"
+        IO.puts "Speed: #{inspect speed} km/hr"
+      end  
+    )
+  end
 
   def distance(x1, y1, x2, y2) do
     :math.sqrt(
