@@ -48,4 +48,22 @@ defmodule ShipSim.ExtractMap do
       {:err, "no positions found"}
     end
   end
+
+  def extract_vessel_by_name(map, vessel_name) do
+    vessels = map["vessels"]
+    ship = Enum.find(vessels, [],
+      fn vessel ->
+        if (vessel["name"] == vessel_name) do
+          vessel
+        else
+          false
+        end
+      end
+    )
+    if (ship) do
+      {:ok, ship}
+    else
+      {:err, "no ship found"}
+    end
+  end
 end

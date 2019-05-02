@@ -11,7 +11,7 @@ defmodule ShipSim.DaysRun do
             %{"timestamp" => timestamp, "x" => x, "y" => y} = position
             {last_distance, {lastx, lasty}, last_delta, last_time} = acc
             new_distance = last_distance + Segment.length(lastx, lasty, x, y)
-            new_delta = last_delta + delta_time(last_time, timestamp)
+            new_delta = last_delta + TimeStamp.delta_time(last_time, timestamp)
             {new_distance, {x,y}, new_delta, timestamp}
           end
         )
@@ -45,11 +45,5 @@ defmodule ShipSim.DaysRun do
         IO.puts "Speed: #{inspect speed} km/hr"
       end  
     )
-  end
-
-  def delta_time(tstring1, tstring2) do
-    {:ok, dt1} = Timex.parse(tstring1, "{ISO:Extended:Z}")
-    {:ok, dt2} = Timex.parse(tstring2, "{ISO:Extended:Z}")
-    DateTime.diff(dt2, dt1, :second)
   end
 end
