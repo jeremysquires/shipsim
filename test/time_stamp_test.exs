@@ -38,6 +38,30 @@ defmodule TimeStampTest do
       assert delta_seconds == 5 * 60
     end
 
+    test "TimeStamp.increment_time +1 minute", context do
+			year2019 = context[:year2019]
+      increment_minute = TimeStamp.increment_time(year2019, 60)
+      assert increment_minute == "2019-01-01T07:41Z"
+    end
+
+    test "TimeStamp.increment_time -1 minute", context do
+			year2019 = context[:year2019]
+      increment_minute = TimeStamp.increment_time(year2019, -60)
+      assert increment_minute == "2019-01-01T07:39Z"
+    end
+
+    test "TimeStamp.increment_time +30 secs round up", context do
+			year2019 = context[:year2019]
+      increment_minute = TimeStamp.increment_time(year2019, 60)
+      assert increment_minute == "2019-01-01T07:41Z"
+    end
+
+    test "TimeStamp.increment_time +29 secs rounds down", context do
+			year2019 = context[:year2019]
+      increment_round_down = TimeStamp.increment_time(year2019, 29)
+      assert increment_round_down == "2019-01-01T07:40Z"
+    end
+
     test "TimeStamp comparison", context do
 			year2020 = context[:year2020]
 			year2019 = context[:year2019]

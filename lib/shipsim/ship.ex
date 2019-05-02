@@ -93,7 +93,8 @@ defmodule ShipSim.Ship do
       :current_time => _current_time,
       :current_position => _current_position,
     } = vessel
-    # increment the time and position
+    # increment the time
+    # 
     # if timestamp is before first position, return the first position
     new_position_index = 0
     new_current_position = positions[new_position_index]
