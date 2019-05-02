@@ -51,7 +51,7 @@ defmodule ShipsimTest do
       assert read_result == :ok && length(runs) == 3
     end
 
-    test "output overall distance and speed for all ships", context do
+    test "output distance and speed for all ships", context do
       {read_result, vessels} = ShipSim.JSONFetch.fetch(context[:file_name])
       _runs = ShipSim.DaysRun.days_run_out(vessels)
       assert read_result == :ok
@@ -83,8 +83,45 @@ defmodule ShipsimTest do
         Map.put(:current_time, start_position["timestamp"]) |>
         Map.put(:current_position, start_position)
       new_tracker = ShipSim.Ship.where(ship_tracker, v1_middle_time)
-      IO.puts "#{inspect new_tracker}"
+      # IO.puts "#{inspect new_tracker}"
       assert new_tracker["name"] == vessel_name
+    end
+
+    test "where is Vessel 1 before start time", context do
+      {read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
+      vessel_name = "Vessel 1"
+      v1_before_start_time = context[:v1_before_start_time]
+      # v1_middle_time = context[:v1_middle_time]
+      # v1_after_end_time = context[:v1_after_end_time]
+      {extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
+      positions = ship["positions"]
+      start_position = List.first(positions)
+      ship_tracker =
+        Map.put(ship, :position_index, 0) |>
+        Map.put(:current_time, start_position["timestamp"]) |>
+        Map.put(:current_position, start_position)
+      new_tracker = ShipSim.Ship.where(ship_tracker, v1_before_start_time)
+      # IO.puts "#{inspect new_tracker}"
+      assert new_tracker[:current_position] == start_position
+    end
+
+    test "where is Vessel 1 after end time", context do
+      {read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
+      vessel_name = "Vessel 1"
+      # v1_before_start_time = context[:v1_before_start_time]
+      # v1_middle_time = context[:v1_middle_time]
+      v1_after_end_time = context[:v1_after_end_time]
+      {extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
+      positions = ship["positions"]
+      start_position = List.first(positions)
+      end_position = List.last(positions)
+      ship_tracker =
+        Map.put(ship, :position_index, 0) |>
+        Map.put(:current_time, start_position["timestamp"]) |>
+        Map.put(:current_position, start_position)
+      new_tracker = ShipSim.Ship.where(ship_tracker, v1_after_end_time)
+      # IO.puts "#{inspect new_tracker}"
+      assert new_tracker[:current_position] == end_position
     end
   end
 end
