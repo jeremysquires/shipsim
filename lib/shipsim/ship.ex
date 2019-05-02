@@ -4,7 +4,7 @@ defmodule ShipSim.Ship do
   """
 
   def interpolate_positions(first_position, next_position, timestamp) do
-    # speed and direction between these waymarks
+    # passed first_position == next_position, return first_position
     # time difference
     leg_time_difference = TimeStamp.delta_time(
       first_position["timestamp"],
@@ -84,23 +84,34 @@ defmodule ShipSim.Ship do
     }
   end
 
-  def advance(vessel, _time_increment) do
+  def advance(vessel, time_increment \\ 60) do
     # set up current location and time
     %{
       "name" => _vessel_name,
       "positions" => positions,
-      :position_index => _position_index,
-      :current_time => _current_time,
+      :position_index => position_index,
+      :current_time => current_time,
       :current_position => _current_position,
     } = vessel
     # increment the time
-    # 
-    # if timestamp is before first position, return the first position
-    new_position_index = 0
-    new_current_position = positions[new_position_index]
-    new_time = positions[new_position_index]["timestamp"]
-    # if timestamp is after last position, return the last position
-    # otherwise calculate new position based upon time, speed, and direction
+    new_time = TimeStamp.increment_time(current_time, time_increment)
+    # get the position bracket of the current time
+    positions_tuple = List.to_tuple(positions)
+    # advance the indexes if necessary
+    next_index =
+      if position_index == tuple_size(positions_tuple) - 1 do
+        position_index
+      else
+        position_index + 1
+      end
+    previous_position = elem(positions_tuple, position_index)
+    next_position = elem(positions_tuple, next_index)
+    # calculate the next position
+    %{
+      index: new_position_index,
+      position: new_current_position,
+      timestamp: new_time
+    } = interpolate_positions(previous_position, next_position, new_time)
     %{
       vessel |
       :current_position => new_current_position,
