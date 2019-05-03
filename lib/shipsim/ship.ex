@@ -84,6 +84,9 @@ defmodule ShipSim.Ship do
     }
   end
 
+  def advance_indexes() do
+  end
+
   def advance(vessel, time_increment \\ 60) do
     # set up current location and time
     %{
@@ -99,19 +102,29 @@ defmodule ShipSim.Ship do
     positions_tuple = List.to_tuple(positions)
     # advance the indexes if necessary
     next_index =
-      if position_index == tuple_size(positions_tuple) - 1 do
+      if (position_index == tuple_size(positions_tuple) - 1) do
         position_index
       else
         position_index + 1
       end
     previous_position = elem(positions_tuple, position_index)
     next_position = elem(positions_tuple, next_index)
+    new_position_index =
+      if ((new_time >= next_position["timestamp"]) && (next_index != position_index)) do
+        next_index
+      else
+        position_index
+      end
+    new_next_index =
+      if (new_position_index == tuple_size(positions_tuple) - 1) do
+        new_position_index
+      else
+        new_position_index + 1
+      end
+    new_previous_position = elem(positions_tuple, new_position_index)
+    new_next_position = elem(positions_tuple, new_next_index)
     # calculate the next position
-    %{
-      index: new_position_index,
-      position: new_current_position,
-      timestamp: new_time
-    } = interpolate_positions(previous_position, next_position, new_time)
+    new_current_position = interpolate_positions(previous_position, next_position, new_time)
     %{
       vessel |
       :current_position => new_current_position,
