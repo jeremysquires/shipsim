@@ -63,21 +63,25 @@ defmodule ShipsimTest do
 
   describe "ShipSim.Ship" do
     setup do
+      file_name = "test/TestData.json"
+      {_read_result, ships} = ShipSim.JSONFetch.fetch(file_name)
+      vessel_name = "Vessel 1"
+      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
+      positions = ship["positions"]
       {
         :ok,
-        file_name: "test/TestData.json",
         v1_before_start_time: "2020-01-01T07:30Z",
         v1_middle_time: "2020-01-01T09:00Z",
         v1_after_end_time: "2020-01-01T10:30Z",
+        positions: positions,
+        ship: ship,
       }
     end
 
     test "where in rising path gives positive slope", context do
-      {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
-      vessel_name = "Vessel 1"
+      ship = context[:ship]
+      positions = context[:positions]
       v1_middle_time = context[:v1_middle_time]
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
-      positions = ship["positions"]
       start_position = List.first(positions)
       ship_tracker =
         Map.put(ship, :position_index, 0) |>
@@ -90,11 +94,9 @@ defmodule ShipsimTest do
     end
 
     test "where before start time gives start position", context do
-      {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
-      vessel_name = "Vessel 1"
+      ship = context[:ship]
+      positions = context[:positions]
       v1_before_start_time = context[:v1_before_start_time]
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
-      positions = ship["positions"]
       start_position = List.first(positions)
       ship_tracker =
         Map.put(ship, :position_index, 0) |>
@@ -106,11 +108,9 @@ defmodule ShipsimTest do
     end
 
     test "where after end time gives end position", context do
-      {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
-      vessel_name = "Vessel 1"
+      ship = context[:ship]
+      positions = context[:positions]
       v1_after_end_time = context[:v1_after_end_time]
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
-      positions = ship["positions"]
       start_position = List.first(positions)
       end_position = List.last(positions)
       ship_tracker =
@@ -123,11 +123,9 @@ defmodule ShipsimTest do
     end
 
     test "advance across legs increments index", context do
-      {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
-      vessel_name = "Vessel 1"
+      ship = context[:ship]
+      positions = context[:positions]
       v1_middle_time = context[:v1_middle_time]
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
-      positions = ship["positions"]
       start_position = List.first(positions)
       ship_tracker =
         Map.put(ship, :position_index, 0) |>
@@ -143,11 +141,9 @@ defmodule ShipsimTest do
     end
 
     test "advance before start time stays at start", context do
-      {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
-      vessel_name = "Vessel 1"
+      ship = context[:ship]
+      positions = context[:positions]
       v1_before_start_time = context[:v1_before_start_time]
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
-      positions = ship["positions"]
       start_position = List.first(positions)
       ship_tracker =
         Map.put(ship, :position_index, 0) |>
@@ -162,11 +158,9 @@ defmodule ShipsimTest do
     end
 
     test "advance after end time stays at end", context do
-      {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
-      vessel_name = "Vessel 1"
+      ship = context[:ship]
+      positions = context[:positions]
       v1_after_end_time = context[:v1_after_end_time]
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
-      positions = ship["positions"]
       start_position = List.first(positions)
       end_position = List.last(positions)
       ship_tracker =

@@ -147,31 +147,33 @@ defmodule ShipSim.Ship do
     }
   end
 
-  def range_and_bearing(vessel, {x, y}) when is_number(x) and is_number(y) do
+  def range_and_bearing(vessel1, vessel2) do
     # extract ship information
     %{
-      "name" => _vessel_name,
-      "positions" => _positions,
-      :position_index => _position_index,
-      :current_time => _current_time,
-      :current_position => current_position,
-    } = vessel
-    range = Segment.length(current_position, {x,y})
-    # TODO: calculate bearing from current position
-    bearing = Segment.angle(current_position, {x,y})
+      "name" => _vessel_name_1,
+      "positions" => _positions_1,
+      :position_index => _position_index_1,
+      :current_time => _current_time_1,
+      :current_position => current_position_1,
+    } = vessel1
+    %{
+      "name" => _vessel_name_2,
+      "positions" => _positions_2,
+      :position_index => _position_index_2,
+      :current_time => _current_time_2,
+      :current_position => current_position_2,
+    } = vessel2
+    %{"x" => x1, "y" => y1, "timestamp" => _timestamp1} = current_position_1
+    %{"x" => x2, "y" => y2, "timestamp" => _timestamp2} = current_position_2
+    range = Segment.length(x1, y1, x2, y2)
+    # calculate true bearing from vessel1 to vessel2
+    bearing = Segment.azimuth({x1, y1}, {x2, y2})
     IO.puts("Range = #{range}")
     IO.puts("Bearing = #{bearing}")
     # return range and bearing
     %{
       :range => range,
       :bearing => bearing
-    }
-  end
-  def range_and_bearing(_vessel, _position) do
-    IO.puts(":range did not provide a valid position")
-    %{
-      :range => nil,
-      :bearing => nil
     }
   end
 end

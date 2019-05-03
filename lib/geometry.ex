@@ -167,6 +167,10 @@ defmodule Segment do
     Math.abs(Segment.angle({x2, y2}) - Segment.angle({x1, y1}))
   end
 
+  def azimuth({x1, y1}, {x2, y2}) do
+    Segment.angle({x2 - x1, y2 - y1})
+  end
+
   # signed area of the parallelogram using the origin
   def det({{x1, y1}, {x2, y2}}), do: x1*y2 - x2*y1
   # rectangular area from 0,0 to x,y
@@ -179,6 +183,7 @@ defmodule Point do
   end
 end
 
+# TODO:
 # get bounding box (line)
 # in bounding box (point)
 # is parallel (line, line)
