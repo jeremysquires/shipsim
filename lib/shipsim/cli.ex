@@ -46,6 +46,7 @@ defmodule ShipSim.CLI do
   """
   def process(:help) do
   IO.puts """
+
     Ship Simulator
     - - - - - - - 
     usage: shipsim <file_name> | --help

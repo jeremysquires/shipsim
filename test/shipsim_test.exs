@@ -45,7 +45,7 @@ defmodule ShipsimTest do
       [file_name: "test/TestData.json"]
     end
 
-    test "overall distance and speed for all ships", context do
+    test "return distance and speed for all ships", context do
       {read_result, vessels} = ShipSim.JSONFetch.fetch(context[:file_name])
       runs = ShipSim.DaysRun.days_run(vessels)
       assert read_result == :ok && length(runs) == 3
@@ -53,7 +53,10 @@ defmodule ShipsimTest do
 
     test "output distance and speed for all ships", context do
       {read_result, vessels} = ShipSim.JSONFetch.fetch(context[:file_name])
+      IO.puts ""
+      IO.puts ""
       _runs = ShipSim.DaysRun.days_run_out(vessels)
+      IO.puts ""
       assert read_result == :ok
     end
   end
@@ -69,7 +72,7 @@ defmodule ShipsimTest do
       }
     end
 
-    test "where is Vessel 1 at middle time", context do
+    test "where in rising path gives positive slope", context do
       {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
       vessel_name = "Vessel 1"
       v1_middle_time = context[:v1_middle_time]
@@ -82,10 +85,11 @@ defmodule ShipsimTest do
         Map.put(:current_position, start_position)
       new_tracker = ShipSim.Ship.where(ship_tracker, v1_middle_time)
       # IO.puts "#{inspect new_tracker}"
-      assert new_tracker["name"] == vessel_name
+      assert new_tracker[:current_position]["x"] > start_position["x"] &&
+      new_tracker[:current_position]["y"] > start_position["y"]
     end
 
-    test "where is Vessel 1 before start time", context do
+    test "where before start time gives start position", context do
       {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
       vessel_name = "Vessel 1"
       v1_before_start_time = context[:v1_before_start_time]
@@ -101,7 +105,7 @@ defmodule ShipsimTest do
       assert new_tracker[:current_position] == start_position
     end
 
-    test "where is Vessel 1 after end time", context do
+    test "where after end time gives end position", context do
       {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
       vessel_name = "Vessel 1"
       v1_after_end_time = context[:v1_after_end_time]
@@ -118,7 +122,7 @@ defmodule ShipsimTest do
       assert new_tracker[:current_position] == end_position
     end
 
-    test "advance Vessel 1 from middle time", context do
+    test "advance across legs increments index", context do
       {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
       vessel_name = "Vessel 1"
       v1_middle_time = context[:v1_middle_time]
@@ -134,10 +138,11 @@ defmodule ShipsimTest do
       # IO.puts "#{inspect advance_ship2}"
       advance_ship2 = ShipSim.Ship.advance(advance_ship, 300)
       # IO.puts "#{inspect advance_ship2}"
-      assert advance_ship[:position_index] == 3 && advance_ship2[:position_index] == 4
+      assert advance_ship[:position_index] == 3 &&
+        advance_ship2[:position_index] == 4
     end
 
-    test "advance Vessel 1 from before start time", context do
+    test "advance before start time stays at start", context do
       {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
       vessel_name = "Vessel 1"
       v1_before_start_time = context[:v1_before_start_time]
@@ -150,11 +155,13 @@ defmodule ShipsimTest do
         Map.put(:current_position, start_position)
       new_tracker = ShipSim.Ship.where(ship_tracker, v1_before_start_time)
       advance_ship = ShipSim.Ship.advance(new_tracker, 300)
-      # IO.puts "#{inspect advance_ship}"
-      assert new_tracker[:current_position] == start_position
+      # IO.puts "#{inspect advance_ship[:current_position]}"
+      # IO.puts "#{inspect start_position}"
+      assert advance_ship[:current_position]["x"] == start_position["x"] &&
+        advance_ship[:current_position]["y"] == start_position["y"]
     end
 
-    test "advance Vessel 1 from after end time", context do
+    test "advance after end time stays at end", context do
       {_read_result, ships} = ShipSim.JSONFetch.fetch(context[:file_name])
       vessel_name = "Vessel 1"
       v1_after_end_time = context[:v1_after_end_time]
@@ -168,8 +175,10 @@ defmodule ShipsimTest do
         Map.put(:current_position, start_position)
       new_tracker = ShipSim.Ship.where(ship_tracker, v1_after_end_time)
       advance_ship = ShipSim.Ship.advance(new_tracker, 300)
-      # IO.puts "#{inspect advance_ship}"
-      assert new_tracker[:current_position] == end_position
+      # IO.puts "#{inspect advance_ship[:current_position]}"
+      # IO.puts "#{inspect end_position}"
+      assert advance_ship[:current_position]["x"] == end_position["x"] &&
+        advance_ship[:current_position]["y"] == end_position["y"]
     end
   end
 end
