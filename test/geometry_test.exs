@@ -112,7 +112,7 @@ defmodule GeometryTest do
 	
 		test "Geometry.Segment.det", context do
 			line = context[:line1]
-			IO.puts "Determinant of line #{inspect line} is #{Segment.det line}"
+			# IO.puts "Determinant of line #{inspect line} is #{Segment.det line}"
       assert Segment.det(line) == -22
     end  
 	end
@@ -120,8 +120,8 @@ defmodule GeometryTest do
 	describe "Geometry Line tests" do
 		test "Geometry.Line.det", context do
 			path = context[:path]
-			IO.puts "Determinant of 2-segment Line #{inspect path}
-				is #{Line.det path}"
+			# IO.puts "Determinant of 2-segment Line #{inspect path}
+			#	is #{Line.det path}"
       assert Line.det(path) == 5
     end  
 
@@ -164,7 +164,7 @@ defmodule GeometryTest do
 	describe "Geometry Triangle tests" do
 		test "Geometry.Triangle.hypotenuse", context do
 			right_triangle = context[:right_triangle]
-			IO.puts "Triangle #{inspect right_triangle} hypotenuse is length:
+			# IO.puts "Triangle #{inspect right_triangle} hypotenuse is length:
 				#{Triangle.hypotenuse right_triangle}"
       assert Triangle.hypotenuse(right_triangle) == 5.0
     end

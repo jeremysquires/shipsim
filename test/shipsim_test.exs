@@ -200,11 +200,10 @@ defmodule ShipsimTest do
         range: range,
         bearing: bearing
       } = ShipSim.Ship.range_and_bearing(ship_tracker2, ship_tracker)
-      IO.puts "#{inspect range} km at #{inspect bearing} deg"
-      IO.puts "#{inspect new_tracker[:current_position]}"
-      IO.puts "#{inspect new_tracker2[:current_position]}"
-      assert new_tracker[:current_position]["x"] > start_position["x"] &&
-        new_tracker[:current_position]["y"] > start_position["y"]
+      # IO.puts "#{inspect range} km at #{inspect bearing} deg"
+      # IO.puts "#{inspect new_tracker[:current_position]}"
+      # IO.puts "#{inspect new_tracker2[:current_position]}"
+      assert range > 0 && bearing < 360 && bearing > 0
     end
   end
 end
