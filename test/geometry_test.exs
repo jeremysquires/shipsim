@@ -15,6 +15,7 @@ defmodule GeometryTest do
   end
 
 	def geometry_data do
+		# positive quadrant
 		r = {3,4}
 		s = {4}
 		point = {3,4}
@@ -25,6 +26,23 @@ defmodule GeometryTest do
 		polygon = {{7,3},{6,4},{3,2},{10,6}}
 		triangle = {{7,3},{6,4},{3,2}}
 		right_triangle = {{0,0},{3,0},{3,4}}
+		# other quadrants
+		point2 = {-3,4}
+		line2 = {{-3,4},{-10,6}}
+		path2 = {{-7,3},{-6,4},{-3,2}}
+		point3 = {3,-4}
+		line3 = {{3,-4},{10,-6}}
+		path3 = {{7,-3},{6,-4},{3,-2}}
+		point4 = {-3,-4}
+		line4 = {{-3,-4},{-10,-6}}
+		path4 = {{-7,-3},{-6,-4},{-3,-2}}
+		# cross quadrants
+		line5 = {{-3,4},{10,-6}}
+		path5 = {{-7,3},{6,-4},{3,2}}
+		line6 = {{-3,4},{10,-6}}
+		path6 = {{-7,-3},{6,-4},{3,2}}
+		line7 = {{-3,-4},{10,6}}
+		path7 = {{7,3},{-6,-4},{-3,2}}
 		{
 			:ok,
 			r: r,
@@ -35,7 +53,22 @@ defmodule GeometryTest do
 			circle: circle,
 			polygon: polygon,
 			triangle: triangle,
-			right_triangle: right_triangle
+			right_triangle: right_triangle,
+			point2: point2,
+			line2: line2,
+			path2: path2,
+			point3: point3,
+			line3: line3,
+			path3: path3,
+			point4: point4,
+			line4: line4,
+			path4: path4,
+			line5: line5,
+			path5: path5,
+			line6: line6,
+			path6: path6,
+			line7: line7,
+			path7: path7,
 		}
 	end
 
@@ -79,7 +112,7 @@ defmodule GeometryTest do
 	
 		test "Geometry.Segment.det", context do
 			line = context[:line1]
-			# IO.puts "Determinant of line #{inspect line} is #{Segment.det line}"
+			IO.puts "Determinant of line #{inspect line} is #{Segment.det line}"
       assert Segment.det(line) == -22
     end  
 	end
@@ -87,9 +120,16 @@ defmodule GeometryTest do
 	describe "Geometry Line tests" do
 		test "Geometry.Line.det", context do
 			path = context[:path]
-			# IO.puts "Determinant of 2-segment Line #{inspect path}
-			#	is #{Line.det path}"
+			IO.puts "Determinant of 2-segment Line #{inspect path}
+				is #{Line.det path}"
       assert Line.det(path) == 5
+    end  
+
+		test "Geometry.Line.angle right_triangle positive quad", context do
+			right_triangle = context[:right_triangle]
+			# IO.puts "Angle between 2-segment Line #{inspect right_triangle}
+			#	is #{Line.angle(right_triangle)}"
+      assert Line.angle(right_triangle) == 90.0
     end  
 	end
 
@@ -124,7 +164,7 @@ defmodule GeometryTest do
 	describe "Geometry Triangle tests" do
 		test "Geometry.Triangle.hypotenuse", context do
 			right_triangle = context[:right_triangle]
-			#IO.puts "Triangle #{inspect right_triangle} hypotenuse is length:
+			IO.puts "Triangle #{inspect right_triangle} hypotenuse is length:
 				#{Triangle.hypotenuse right_triangle}"
       assert Triangle.hypotenuse(right_triangle) == 5.0
     end

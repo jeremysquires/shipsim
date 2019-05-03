@@ -59,32 +59,16 @@ end
 defmodule Triangle do
   def hypotenuse(points) when tuple_size(points) == 3 do
     # points: {{x1, y1}, {x2, y2}, {x3, y3}}
-    # find which points make a right angle
-    points_length = tuple_size(points)
-    pointlist = Tuple.to_list(points)
-    result = List.foldl(pointlist, 0, fn(point, acc) ->
-      # IO.puts "fn: #{inspect(point)}, #{inspect(acc)}"
-      point2 = elem(points, GeometryUtils.wrap_index(points_length,
-        acc + 1))
-      point3 = elem(points, GeometryUtils.wrap_index(points_length,
-        acc + 2))
-      ninety = (Line.angle({point, point2, point3}) == 90)
-      # IO.puts "Turn is 90: #{ninety} at point #{inspect point}"
-      cond do
-        ninety -> -1*acc
-        acc < 0 -> acc
-        true -> acc + 1
-      end
-    end
-    )
-    if result >= 0  do
-      # IO.puts("#{inspect points} does not have a right angle")
-      0
-    else
-      Segment.length({
-        elem(points, -1*result + 1),
-        elem(points, GeometryUtils.wrap_index(3, -1*result - 1))
-      })
+    # find points which make a right angle, length the opposite or 0
+    {point1, point2, point3} = points
+    cond do
+      Math.abs(Line.angle({point1, point2, point3})) == 90.0 ->
+        Segment.length(point1, point3)
+      Math.abs(Line.angle({point2, point3, point1})) == 90.0 ->
+        Segment.length(point2, point1)
+      Math.abs(Line.angle({point3, point1, point2})) == 90.0 ->
+        Segment.length(point3, point2)
+      true -> 0
     end
   end
 
@@ -129,16 +113,18 @@ defmodule Line do
   def det({{x1, y1}, {x2, y2}, {x3, y3}}) do
     a1 = x2 - x1
     b1 = y2 - y1
-    a2 = x3 - x1
-    b2 = y3 - y1
+    a2 = x3 - x2
+    b2 = y3 - y2
     Segment.det({{a1, b1}, {a2, b2}})
   end
+  def is_cw({{x1, y1}, {x2, y2}, {x3, y3}}), do: det({{x1, y1}, {x2, y2}, {x3, y3}}) < 0
+  def is_ccw({{x1, y1}, {x2, y2}, {x3, y3}}), do: det({{x1, y1}, {x2, y2}, {x3, y3}}) >= 0
 
   def angle({{x1, y1}, {x2, y2}, {x3, y3}}) do
-    a1 = x2 - x1
-    b1 = y2 - y1
-    a2 = x3 - x1
-    b2 = y3 - y1
+    a1 = x1 - x2
+    b1 = y1 - y2
+    a2 = x3 - x2
+    b2 = y3 - y2
     Segment.angle({a1, b1}, {a2, b2})
   end
 end
@@ -157,20 +143,26 @@ defmodule Segment do
     Segment.length(x1, y1, x2, y2)
   end
 
+  # Angle 0-180 from East (positive x-axis), negative CW, positive CCW
   def angle({x, y}) do
     # IO.puts "Call to Segment.angle (#{x},#{y}) = #{:math.atan(y/x) * 180/:math.pi()}"
     :math.atan2(y,x) * 180/:math.pi()
   end
+  # least angle between two vectors, negative CW, positive CCW
   def angle({x1, y1}, {x2, y2}) do
-    Math.abs(Segment.angle({x2, y2}) - Segment.angle({x1, y1}))
+    diff = Segment.angle({x2, y2}) - Segment.angle({x1, y1})
+    cond do
+      diff < 180 -> diff + 180
+      diff > 180 -> diff - 180
+      true -> diff
+    end
   end
 
   def azimuth({x1, y1}) do
     atan2 = Segment.angle({x1, y1})
     cond do
-      atan2 < 0 -> Math.abs(atan2) + 90
-      atan2 < 90 -> 90 - atan2
-      atan2 == 90 -> 0
+      atan2 <= 0 -> Math.abs(atan2) + 90
+      atan2 <= 90 -> 90 - atan2
       true -> 450 - atan2
     end
   end
@@ -179,9 +171,12 @@ defmodule Segment do
   end
 
   # signed area of the parallelogram using the origin
-  def det({{x1, y1}, {x2, y2}}), do: x1*y2 - x2*y1
+  def det({{x1, y1}, {x2, y2}}), do: ((x1*y2) - (x2*y1))
   # rectangular area from 0,0 to x,y
   def det({x, y}), do: Rectangle.area {x, y}
+  def is_cw({{x1, y1}, {x2, y2}}), do: det({{x1, y1}, {x2, y2}}) < 0
+  def is_ccw({{x1, y1}, {x2, y2}}), do: det({{x1, y1}, {x2, y2}}) >= 0
+
 end
 
 defmodule Point do
