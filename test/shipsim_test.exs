@@ -65,9 +65,10 @@ defmodule ShipsimTest do
     setup do
       file_name = "test/TestData.json"
       {_read_result, ships} = ShipSim.JSONFetch.fetch(file_name)
-      vessel_name = "Vessel 1"
-      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, vessel_name)
+      {_extract_result, ship} = ShipSim.ExtractMap.extract_vessel_by_name(ships, "Vessel 1")
+      {_extract_result2, ship2} = ShipSim.ExtractMap.extract_vessel_by_name(ships, "Vessel 2")
       positions = ship["positions"]
+      positions2 = ship2["positions"]
       {
         :ok,
         v1_before_start_time: "2020-01-01T07:30Z",
@@ -75,6 +76,8 @@ defmodule ShipsimTest do
         v1_after_end_time: "2020-01-01T10:30Z",
         positions: positions,
         ship: ship,
+        positions2: positions2,
+        ship2: ship2,
       }
     end
 
@@ -173,6 +176,35 @@ defmodule ShipsimTest do
       # IO.puts "#{inspect end_position}"
       assert advance_ship[:current_position]["x"] == end_position["x"] &&
         advance_ship[:current_position]["y"] == end_position["y"]
+    end
+
+    test "range and bearing in rising path", context do
+      ship = context[:ship]
+      positions = context[:positions]
+      ship2 = context[:ship2]
+      positions2 = context[:positions2]
+      v1_middle_time = context[:v1_middle_time]
+      start_position = List.first(positions)
+      start_position2 = List.first(positions2)
+      ship_tracker =
+        Map.put(ship, :position_index, 0) |>
+        Map.put(:current_time, start_position["timestamp"]) |>
+        Map.put(:current_position, start_position)
+      ship_tracker2 =
+        Map.put(ship2, :position_index, 0) |>
+        Map.put(:current_time, start_position2["timestamp"]) |>
+        Map.put(:current_position, start_position2)
+      new_tracker = ShipSim.Ship.where(ship_tracker, v1_middle_time)
+      new_tracker2 = ShipSim.Ship.where(ship_tracker2, v1_middle_time)
+      %{
+        range: range,
+        bearing: bearing
+      } = ShipSim.Ship.range_and_bearing(ship_tracker2, ship_tracker)
+      IO.puts "#{inspect range} km at #{inspect bearing} deg"
+      IO.puts "#{inspect new_tracker[:current_position]}"
+      IO.puts "#{inspect new_tracker2[:current_position]}"
+      assert new_tracker[:current_position]["x"] > start_position["x"] &&
+        new_tracker[:current_position]["y"] > start_position["y"]
     end
   end
 end

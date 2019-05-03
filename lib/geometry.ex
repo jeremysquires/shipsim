@@ -157,18 +157,25 @@ defmodule Segment do
     Segment.length(x1, y1, x2, y2)
   end
 
-  def angle({x, y}) when x == 0 and y != 0, do: 90
-  def angle({x, y}) when x == 0 and y == 0, do: 0
-  def angle({x, y}) when x != 0 do
+  def angle({x, y}) do
     # IO.puts "Call to Segment.angle (#{x},#{y}) = #{:math.atan(y/x) * 180/:math.pi()}"
-    :math.atan(y/x) * 180/:math.pi()
+    :math.atan2(y,x) * 180/:math.pi()
   end
   def angle({x1, y1}, {x2, y2}) do
     Math.abs(Segment.angle({x2, y2}) - Segment.angle({x1, y1}))
   end
 
+  def azimuth({x1, y1}) do
+    atan2 = Segment.angle({x1, y1})
+    cond do
+      atan2 < 0 -> Math.abs(atan2) + 90
+      atan2 < 90 -> 90 - atan2
+      atan2 == 90 -> 0
+      true -> 450 - atan2
+    end
+  end
   def azimuth({x1, y1}, {x2, y2}) do
-    Segment.angle({x2 - x1, y2 - y1})
+    azimuth({x2 - x1, y2 - y1})
   end
 
   # signed area of the parallelogram using the origin
