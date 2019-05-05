@@ -20,12 +20,22 @@ defmodule ShipSim.CLI do
     |> process
   end
 
+  def no_op do
+    # nothing
+  end
+
   # use this if CLI will be the main Application
-  # def start(_how, _state) do
-  #  IO.puts "#{inspect System.argv()}"
-  #  main(System.argv())
-  #  {:ok, self()}
-  # end
+  def start(_how, args) do
+    # IO.puts "#{inspect System.argv()}"
+    # handle mix test by removing "test"
+    sysargs = List.delete(System.argv(), "test")
+    cond do
+      length(args) > 0 -> main(args)
+      length(sysargs) > 0 -> main(sysargs)
+      true -> main()
+    end
+    {:ok, self()}
+  end
 
   def parse_args(args) do
     parse = OptionParser.parse(args, 
@@ -52,7 +62,7 @@ defmodule ShipSim.CLI do
     # |> ShipSim.ExtractMap.extract_from_body
     # IO.inspect file_name
     ShipSim.run_sim(file_name)
-    {:ok, self()}
+    # {:ok, self()}
   end
 
   @doc """
@@ -66,7 +76,7 @@ defmodule ShipSim.CLI do
       usage: shipsim <file_name> | --help
       example: shipsim test/TestData.json
     """
-    {:ok, self()}
+    # {:ok, self()}
   end
 
 end

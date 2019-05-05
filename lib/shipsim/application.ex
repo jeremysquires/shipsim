@@ -7,10 +7,10 @@ defmodule ShipSim.Application do
   def start(_type, _args \\ []) do
     import Supervisor.Spec, warn: false
     children = [
-      # Define workers and child supervisors to be supervised
-      # Supervisor.child_spec({ShipSim.CLI, :main, [System.argv()]}, id: :shipsim)
+      # id: :shipsim, start: {ShipSim, :start, [:normal, []]}
+      # id: :shipsim, start: {ShipSim.CLI, :start, [:normal, []]}
       %{
-        id: :shipsim, start: {ShipSim.CLI, :main, [System.argv()]}
+        id: :shipsim, start: {ShipSim, :start, [:normal, []]}
       }
     ]
     # See https://hexdocs.pm/elixir/Supervisor.html

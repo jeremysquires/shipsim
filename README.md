@@ -32,10 +32,14 @@ to an output file in markdown format.
 >
 
 If different data should be passed to the application, use the command line
-interface to pass in the new file name.
+interface to pass in the new file name. This is a workaround due to mix run
+attempting to process everything as script files unless code is evaled using
+the -e option.
 
 >
-> `mix run -e "ShipSim.CLI.main System.argv" -- --file test/TestData.json`
+> `mix run -e "ShipSim.CLI.main System.argv" -- test/TestData.json`
+>
+> `mix run -e "ShipSim.CLI.main System.argv" -- --help`
 >
 
 ## Debug

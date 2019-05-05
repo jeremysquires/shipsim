@@ -104,15 +104,22 @@ defmodule ShipSim do
     advance_loop(new_ship_trackers, new_timestamp, highest_time, new_closest_points)
   end
 
-  def start(_how, _state) do
-    if (!List.first(System.argv())) do
-      run_sim()
+  # for running shipsim as the main application
+  def start(_how, args) do
+    # handle mix test by removing "test"
+    sysargs = List.delete(System.argv(), "test")
+    cond do
+      length(args) > 0 -> run_sim(args)
+      length(sysargs) > 0 -> :ok
+      true -> run_sim()
     end
     {:ok, self()}
   end
 
   @doc """
   Run the simulator
+
+  TODO: remove the default or don't call with missing args
   """
   def run_sim(file_name \\ "test/TestData.json") do
     # TODO: pattern match against :ok and :error
