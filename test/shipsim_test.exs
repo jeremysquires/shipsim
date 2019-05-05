@@ -183,7 +183,7 @@ defmodule ShipsimTest do
       positions = context[:positions]
       ship2 = context[:ship2]
       positions2 = context[:positions2]
-      v1_middle_time = context[:v1_middle_time]
+      # v1_middle_time = context[:v1_middle_time]
       start_position = List.first(positions)
       start_position2 = List.first(positions2)
       ship_tracker =
@@ -194,8 +194,8 @@ defmodule ShipsimTest do
         Map.put(ship2, :position_index, 0) |>
         Map.put(:current_time, start_position2["timestamp"]) |>
         Map.put(:current_position, start_position2)
-      new_tracker = ShipSim.Ship.where(ship_tracker, v1_middle_time)
-      new_tracker2 = ShipSim.Ship.where(ship_tracker2, v1_middle_time)
+      # new_tracker = ShipSim.Ship.where(ship_tracker, v1_middle_time)
+      # new_tracker2 = ShipSim.Ship.where(ship_tracker2, v1_middle_time)
       %{
         range: range,
         bearing: bearing
