@@ -116,47 +116,7 @@ defmodule ShipSim do
     {:ok, self()}
   end
 
-  @doc """
-  Run the simulator
-
-  TODO: remove the default or don't call with missing args
-  """
-  def run_sim(file_name \\ "test/TestData.json") do
-    # TODO: pattern match against :ok and :error
-    {result, vessels} = ShipSim.JSONFetch.fetch(file_name)
-    if (result == :error) do
-      # error = "File : #{inspect file_name}" <> "Error : #{inspect vessels}"
-      IO.puts "File : #{inspect file_name}"
-      IO.puts "Error : #{inspect vessels}"
-      Process.exit(self(), :kill)
-    end
-    # start time slice at the lowest time
-    # TODO: find the lowest timestamp
-    lowest_time = "2020-01-01T07:40Z"
-    # end at the highest time
-    # TODO: find the highest timestamp
-    highest_time = "2020-01-01T11:24Z"
-    # initialize all ship processes
-    # using message passing loop
-    # _ships = ShipSim.initSimLoop()
-    # using Agent
-    # using Task
-    # using in memory objects
-    ships = vessels["vessels"]
-    ship_trackers = Enum.map(ships,
-      fn ship ->
-        start_position = List.first(ship["positions"])
-        ship_tracker =
-          Map.put(ship, :position_index, 0) |>
-          Map.put(:current_time, lowest_time) |>
-          Map.put(:current_position, start_position)
-        ShipSim.Ship.where(ship_tracker, lowest_time)
-      end
-    )
-    # move time slice ahead in loop
-    # until latest time is encountered
-    {:ok, end_trackers, closest_points} =
-      advance_loop(ship_trackers, lowest_time, highest_time, [])
+  def final_output(vessels, end_trackers, closest_points) do
     # output end state
     # IO.puts "#{inspect end_trackers}"
     # Enum.each(end_trackers, &(Scribe.print(&1, colorize: false)))
@@ -252,7 +212,52 @@ defmodule ShipSim do
     # Scribe.print(closest_points, colorize: false, style: Scribe.Style.GithubMarkdown)
     # output distance and speed for all ships
     IO.puts "## Ship Run Statistics"
-    _runs = ShipSim.DaysRun.days_run_out(vessels)
+    _runs = ShipSim.DaysRun.days_run_out(vessels)    
+  end
+
+  @doc """
+  Run the simulator
+
+  TODO: remove the default or don't call with missing args
+  """
+  def run_sim(file_name \\ "test/TestData.json") do
+    # TODO: pattern match against :ok and :error
+    {result, vessels} = ShipSim.JSONFetch.fetch(file_name)
+    if (result == :error) do
+      # error = "File : #{inspect file_name}" <> "Error : #{inspect vessels}"
+      IO.puts "File : #{inspect file_name}"
+      IO.puts "Error : #{inspect vessels}"
+      Process.exit(self(), :kill)
+    end
+    # start time slice at the lowest time
+    # TODO: find the lowest timestamp
+    lowest_time = "2020-01-01T07:40Z"
+    # end at the highest time
+    # TODO: find the highest timestamp
+    highest_time = "2020-01-01T11:24Z"
+    # initialize all ship processes
+    # using message passing loop
+    # _ships = ShipSim.initSimLoop()
+    # using Agent
+    # using Task
+    # using in memory objects
+    ships = vessels["vessels"]
+    ship_trackers = Enum.map(ships,
+      fn ship ->
+        start_position = List.first(ship["positions"])
+        ship_tracker =
+          Map.put(ship, :position_index, 0) |>
+          Map.put(:current_time, lowest_time) |>
+          Map.put(:current_position, start_position)
+        ShipSim.Ship.where(ship_tracker, lowest_time)
+      end
+    )
+    # move time slice ahead in loop
+    # until latest time is encountered
+    {:ok, end_trackers, closest_points} =
+      advance_loop(ship_trackers, lowest_time, highest_time, [])
+    # print output
+    final_output(vessels, end_trackers, closest_points)
   end
 
 end
