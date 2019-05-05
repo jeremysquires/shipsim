@@ -144,10 +144,100 @@ defmodule ShipSim do
     {:ok, end_trackers, closest_points} =
       advance_loop(ship_trackers, lowest_time, highest_time, [])
     # output end state
-    IO.puts "#{inspect end_trackers}"
+    # IO.puts "#{inspect end_trackers}"
+    # Enum.each(end_trackers, &(Scribe.print(&1, colorize: false)))
+    IO.puts "# Ship End State"
+    IO.puts ""
+    Enum.each(end_trackers,
+      fn tracker ->
+        IO.puts "## #{tracker["name"]}"
+        IO.puts ""
+        Scribe.print([tracker.current_position],
+          colorize: false,
+          data: [{"Date/Time",
+            fn row ->
+              {:ok, dt} = Timex.parse(row["timestamp"], "{ISO:Extended:Z}")
+              DateTime.to_string(dt)
+            end
+            },
+            {"North",
+              fn row ->
+                Float.round(row["y"] + 0.0, 1)|>Float.to_string()
+              end
+            },
+            {"East",
+              fn row ->
+                Float.round(row["x"] + 0.0, 1)|>Float.to_string()
+              end
+            }
+          ]
+        )
+      end
+    )
+    # Scribe.print(end_trackers, colorize: false, style: Scribe.Style.GithubMarkdown)
     # output closest point of approach information
-    IO.puts "#{inspect closest_points}"  
+    # IO.puts "#{inspect closest_points}"
+    # Enum.each(closest_points, &(Scribe.print(&1, colorize: false)))
+    IO.puts "# Closest Points of Approach"
+    IO.puts ""
+    Enum.each(closest_points,
+      fn closest ->
+        IO.puts "## #{closest.ownship} -> #{closest.target}"
+        IO.puts ""
+        IO.puts "* Range:   #{Float.round(closest.range, 2)|>Float.to_string()} km"
+        IO.puts "* Bearing: #{Float.round(closest.bearing, 1)|>Float.to_string()} deg T"
+        {:ok, dt} = Timex.parse(closest.time, "{ISO:Extended:Z}")
+        IO.puts "* Time:    #{DateTime.to_string(dt)}"
+        IO.puts ""
+        IO.puts "### #{closest.ownship} Position"
+        IO.puts ""
+        Scribe.print([closest.own_position],
+          colorize: false,
+          data: [{"Date/Time",
+            fn row ->
+              {:ok, dt} = Timex.parse(row["timestamp"], "{ISO:Extended:Z}")
+              DateTime.to_string(dt)
+            end
+            },
+            {"North",
+              fn row ->
+                Float.round(row["y"] + 0.0, 1)|>Float.to_string()
+              end
+            },
+            {"East",
+              fn row ->
+                Float.round(row["x"] + 0.0, 1)|>Float.to_string()
+              end
+            }
+          ]
+        )
+        IO.puts "### #{closest.target} Position"
+        IO.puts ""
+        Scribe.print([closest.trg_position],
+          colorize: false,
+          data: [{"Date/Time",
+            fn row ->
+              {:ok, dt} = Timex.parse(row["timestamp"], "{ISO:Extended:Z}")
+              DateTime.to_string(dt)
+            end
+            },
+            {"North",
+              fn row ->
+                Float.round(row["y"] + 0.0, 1)|>Float.to_string()
+              end
+            },
+            {"East",
+              fn row ->
+                Float.round(row["x"] + 0.0, 1)|>Float.to_string()
+              end
+            }
+          ]
+        )
+      end
+    )
+    # Scribe.print(closest_points, colorize: false, style: Scribe.Style.GithubMarkdown)
     # output distance and speed for all ships
+    IO.puts "## Ship Run Statistics"
     _runs = ShipSim.DaysRun.days_run_out(vessels)
   end
 

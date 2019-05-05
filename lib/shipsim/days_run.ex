@@ -39,10 +39,11 @@ defmodule ShipSim.DaysRun do
           :speed => speed
         } = vessel
         IO.puts ""
-        IO.puts "Vessel #{inspect vesselname} day's run:"
-        IO.puts "Run: #{inspect distance_run} km"
-        IO.puts "Time: #{inspect hours_run} hours"
-        IO.puts "Speed: #{inspect speed} km/hr"
+        IO.puts "### Vessel #{vesselname} run"
+        IO.puts ""
+        IO.puts "Run:   #{Float.round(distance_run, 2)|>Float.to_string()} km"
+        IO.puts "Time:  #{Float.round(hours_run,1)|>Float.to_string()} hours"
+        IO.puts "Speed: #{Float.round(speed,2)|>Float.to_string()} km/hr"
       end  
     )
   end

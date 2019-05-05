@@ -37,6 +37,7 @@ defmodule ShipSim.Mixfile do
     [{:poison, "~> 4.0"},
      {:earmark, "~> 1.3.2", only: :dev},
      {:ex_doc, "~> 0.20.2", only: :dev},
-     {:timex, "~> 3.0"}]
+     {:timex, "~> 3.0"},
+     {:scribe, "~> 0.9"}]
   end
 end
