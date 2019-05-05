@@ -105,15 +105,16 @@ defmodule ShipSim do
   end
 
   def start(_how, _state) do
-    run_sim()
+    if (!List.first(System.argv())) do
+      run_sim()
+    end
     {:ok, self()}
   end
 
   @doc """
   Run the simulator
   """
-  def run_sim do
-    file_name = "test/TestData.json"
+  def run_sim(file_name \\ "test/TestData.json") do
     # TODO: pattern match against :ok and :error
     {:ok, vessels} = ShipSim.JSONFetch.fetch(file_name)
     # start time slice at the lowest time

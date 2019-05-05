@@ -4,45 +4,83 @@ ShipSim takes a JSON file containing ship's positions and simulates the ships mo
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `shipsim` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [{:shipsim, "~> 0.1.0"}]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/shipsim](https://hexdocs.pm/shipsim).
+Install [elixir](https://elixir-lang.org/install.html)
 
 ## Build
 
-mix escript.build
-
-## Run
-
-escript shipsim --help
-
-escript shipsim test/TestData.json
-
-iex -S mix
+>
+> `mix`
+>
 
 ## Test
 
-mix test
+>
+> `mix test`
+>
 
-escript shipsim test/TestData.json
+## Run
 
-## References
+The application is currently run using the mix build tool, as the standalone
+CLI executable depends upon escript, and this has incompatibilities with the Timex
+module (see "Escript Standalone Exes" section below).
 
-### Create New App Using Mix
+By default, mix will run against the provided test data. Output can be redirected
+to an output file in markdown format.
 
-mix new shipsim --module ShipSim
+>
+> `mix > final_output.md`
+>
 
-edit mix.exs and other module files based upon: 
+If different data should be passed to the application, use the command line
+interface to pass in the new file name.
+
+>
+> `mix run -e "ShipSim.CLI.main System.argv" -- --file test/TestData.json`
+>
+
+## Debug
+
+>
+> `iex -S mix`
+>
+> `ShipSim.run_sim()`
+>
+
+* [Debugging Elixir Docs](https://elixir-lang.org/getting-started/debugging.html)
+* [Debugging Plataformatec](http://blog.plataformatec.com.br/2016/04/debugging-techniques-in-elixir-lang/)
+* [Debugger Erlang](http://erlang.org/doc/apps/debugger/debugger_chapter.html)
+
+## Escript Standalone Exes
+
+Unfortunately, this code uses Timex, which depends upon Tzdata, and there is
+currently an incompatibility between Tzdata and escript that has yet to be resolved.
+
+[Timex with escript](https://libraries.io/hex/timex/3.1.0#timex-with-escript)
+
+What this means is that although we have escript enabled in the mix config,
+it throws an error when we run it.
+
+For now I have left the escript configuration in place in hopes that Tzdata will
+be fixed to work with escript and the following commands can be used to test it.
+
+The workaround for now is to run mix itself to run the code.
+
+### escript Build
+
+>
+> `mix escript.build`
+>
+
+### escript Run
+
+>
+> `escript shipsim --help`
+>
+> `escript shipsim test/TestData.json`
+>
+> `escript shipsim --file test/TestData.json`
+>
+
+## escript References
 
 [Elixir Console Application](https://hackernoon.com/elixir-console-application-with-json-parsing-lets-print-to-console-b701abf1cb14)
-
-

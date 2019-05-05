@@ -15,17 +15,29 @@ defmodule ShipSim.CLI do
   
   """
   def main(args \\ []) do
+    # IO.puts "#{inspect args}"
     parse_args(args)
     |> process
   end
 
+  # use this if CLI will be the main Application
+  # def start(_how, _state) do
+  #  IO.puts "#{inspect System.argv()}"
+  #  main(System.argv())
+  #  {:ok, self()}
+  # end
+
   def parse_args(args) do
     parse = OptionParser.parse(args, 
-                               switches: [help: :boolean],
+                               switches: [
+                                 help: :boolean,
+                                 file: :string
+                                ],
                                aliases: [h: :help])
 
     case parse do
       {[help: true], _, _} -> :help
+      {[file: file_name], _, _} -> {file_name}
       {_, [file_name], _} -> {file_name}
       {[], [], []} -> :help
     end
@@ -34,12 +46,12 @@ defmodule ShipSim.CLI do
   @doc """
   Passed a file name, fetch the JSON and extract it into variables
   """
-  def process({_file_name}) do
+  def process({file_name}) do
     # ShipSim.JSONFetch.fetch(file_name)
     # |> ShipSim.DaysRun.days_run
     # |> ShipSim.ExtractMap.extract_from_body
     # IO.inspect file_name
-    ShipSim.run_sim()
+    ShipSim.run_sim(file_name)
   end
 
   @doc """
