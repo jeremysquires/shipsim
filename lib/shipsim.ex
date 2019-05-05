@@ -117,9 +117,14 @@ defmodule ShipSim do
   end
 
   def final_output(vessels, end_trackers, closest_points) do
+    # output distance and speed for all ships
+    IO.puts "# Ship Run Statistics"
+    runs = ShipSim.DaysRun.days_run_out(vessels)
+    average_speed = Enum.reduce(runs, 0, &( &1.speed + &2)) / length(runs)
     # output end state
     # IO.puts "#{inspect end_trackers}"
     # Enum.each(end_trackers, &(Scribe.print(&1, colorize: false)))
+    IO.puts ""
     IO.puts "# Ship End State"
     IO.puts ""
     Enum.each(end_trackers,
@@ -163,6 +168,11 @@ defmodule ShipSim do
         {:ok, dt} = Timex.parse(closest.time, "{ISO:Extended:Z}")
         IO.puts "* Time:    #{DateTime.to_string(dt)}"
         IO.puts ""
+        if (closest.range < (average_speed / 2)) do
+          IO.puts "WARN: The range is less than half the average speed of all the vessels."
+          IO.puts "WARN: The two vessels are closer than one hour's steam from each other."
+          IO.puts ""
+        end
         IO.puts "### #{closest.ownship} Position"
         IO.puts ""
         Scribe.print([closest.own_position],
@@ -209,10 +219,6 @@ defmodule ShipSim do
         )
       end
     )
-    # Scribe.print(closest_points, colorize: false, style: Scribe.Style.GithubMarkdown)
-    # output distance and speed for all ships
-    IO.puts "## Ship Run Statistics"
-    _runs = ShipSim.DaysRun.days_run_out(vessels)    
   end
 
   @doc """

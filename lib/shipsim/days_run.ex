@@ -46,5 +46,6 @@ defmodule ShipSim.DaysRun do
         IO.puts "Speed: #{Float.round(speed,2)|>Float.to_string()} km/hr"
       end  
     )
+    results
   end
 end
