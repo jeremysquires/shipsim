@@ -39,21 +39,74 @@ defmodule ShipSim do
     _lowest_time = "2020-01-01T07:40Z"
   end
 
+  def all_ranges([ownship|others], results) do
+    # compute ranges
+    new_ranges = Enum.map(others,
+      fn target ->
+        %{
+          range: range,
+          bearing: bearing
+        } = ShipSim.Ship.range_and_bearing(ownship, target)
+        # TODO: add reciprocal bearing from target back to ownship
+        # TODO: add check for crossing of these two legs
+        %{
+          ownship: ownship["name"],
+          target: target["name"],
+          time: target[:current_time],
+          own_position: ownship[:current_position],
+          trg_position: target[:current_position],
+          range: range,
+          bearing: bearing
+        }
+      end
+    )
+    # add to results
+    new_results = results ++ new_ranges
+    all_ranges(others, new_results)
+  end
+  def all_ranges(_, results) do
+    # last ship has been compared to all the others
+    results
+  end
+
+  def update_closest_points([], ranges) do
+    ranges
+  end
+  def update_closest_points(closest_points, ranges) do
+    closest_points
+    |> Enum.zip(ranges)
+    |> Enum.map(fn {closest, range} -> 
+      if (closest.range > range.range), do: range, else: closest
+    end)
+    # IO.puts "#{new_closest_points}"
+    # for {closest, range} <- Enum.zip(closest_points, ranges),
+    #  into: [],
+    #    do: if (closest.range > range.range), do: range, else: closest
+  end
+
   def advance_loop(ship_trackers, timestamp, highest_time, closest_points) when timestamp > highest_time do
     {:ok, ship_trackers, closest_points}
   end
 
   def advance_loop(ship_trackers, _timestamp, highest_time, closest_points) do
+    # advance ships
     new_ship_trackers = Enum.map(ship_trackers,
       fn tracker ->
         ShipSim.Ship.advance(tracker, 60)
       end
     )
+    # find the ranges between all ships
+    ranges = all_ranges(new_ship_trackers, [])
     # find the closest points of approach
-    # TODO: | 1 => %{position: position, range: range, bearing: bearing}
-    new_closest_points = closest_points
+    new_closest_points = update_closest_points(closest_points, ranges)
     new_timestamp = List.first(new_ship_trackers)[:current_time]
+    # recurse until time runs out
     advance_loop(new_ship_trackers, new_timestamp, highest_time, new_closest_points)
+  end
+
+  def start(_how, _state) do
+    run_sim()
+    {:ok, self()}
   end
 
   @doc """
@@ -88,11 +141,12 @@ defmodule ShipSim do
     )
     # move time slice ahead in loop
     # until latest time is encountered
-    {:ok, end_trackers, closest_points} = advance_loop(ship_trackers, lowest_time, highest_time, %{})
+    {:ok, end_trackers, closest_points} =
+      advance_loop(ship_trackers, lowest_time, highest_time, [])
+    # output end state
     IO.puts "#{inspect end_trackers}"
-    IO.puts "#{inspect closest_points}"
     # output closest point of approach information
-  
+    IO.puts "#{inspect closest_points}"  
     # output distance and speed for all ships
     _runs = ShipSim.DaysRun.days_run_out(vessels)
   end

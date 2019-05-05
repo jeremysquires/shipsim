@@ -17,7 +17,10 @@ defmodule ShipSim.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     # add :httpoison to get HTTP REST access
-    [extra_applications: [:logger, :timex]]
+    [
+      extra_applications: [:logger, :timex],
+      mod: {ShipSim, []}
+    ]
   end
 
   # Dependencies can be Hex packages:

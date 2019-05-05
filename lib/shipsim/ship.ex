@@ -168,8 +168,8 @@ defmodule ShipSim.Ship do
     range = Segment.length(x1, y1, x2, y2)
     # calculate true bearing from vessel1 to vessel2
     bearing = Segment.azimuth({x1, y1}, {x2, y2})
-    IO.puts("Range = #{range}")
-    IO.puts("Bearing = #{bearing}")
+    # IO.puts("Range = #{range}")
+    # IO.puts("Bearing = #{bearing}")
     # return range and bearing
     %{
       :range => range,
