@@ -19,7 +19,7 @@ defmodule ShipSim.Mixfile do
     # add :httpoison to get HTTP REST access
     [
       extra_applications: [:logger, :timex],
-      mod: {ShipSim, []}
+      mod: {ShipSim.Application, []}
     ]
   end
 

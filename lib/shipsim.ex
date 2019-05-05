@@ -116,7 +116,13 @@ defmodule ShipSim do
   """
   def run_sim(file_name \\ "test/TestData.json") do
     # TODO: pattern match against :ok and :error
-    {:ok, vessels} = ShipSim.JSONFetch.fetch(file_name)
+    {result, vessels} = ShipSim.JSONFetch.fetch(file_name)
+    if (result == :error) do
+      # error = "File : #{inspect file_name}" <> "Error : #{inspect vessels}"
+      IO.puts "File : #{inspect file_name}"
+      IO.puts "Error : #{inspect vessels}"
+      Process.exit(self(), :kill)
+    end
     # start time slice at the lowest time
     # TODO: find the lowest timestamp
     lowest_time = "2020-01-01T07:40Z"

@@ -52,19 +52,21 @@ defmodule ShipSim.CLI do
     # |> ShipSim.ExtractMap.extract_from_body
     # IO.inspect file_name
     ShipSim.run_sim(file_name)
+    {:ok, self()}
   end
 
   @doc """
   Passed the :help atom, print out help
   """
   def process(:help) do
-  IO.puts """
+    IO.puts """
 
-    Ship Simulator
-    - - - - - - - 
-    usage: shipsim <file_name> | --help
-    example: shipsim test/TestData.json
-  """
+      Ship Simulator
+      - - - - - - - 
+      usage: shipsim <file_name> | --help
+      example: shipsim test/TestData.json
+    """
+    {:ok, self()}
   end
 
 end
