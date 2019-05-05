@@ -28,7 +28,8 @@ defmodule ShipSim.JSONFetch do
   """
   def handle_json({:error, code}) do
     outstring = :file.format_error(code)
-    IO.puts "Error #{outstring}"
+    # IO.puts "Error #{outstring}"
+    {:error, outstring}
   end
 
 end
