@@ -9,6 +9,8 @@ Install [elixir](https://elixir-lang.org/install.html)
 ## Build
 
 >
+> `mix deps.get`
+>
 > `mix`
 >
 
@@ -21,11 +23,11 @@ Install [elixir](https://elixir-lang.org/install.html)
 ## Run
 
 The application is currently run using the mix build tool, as the standalone
-CLI executable depends upon escript, and this has incompatibilities with the Timex
-module (see "Escript Standalone Exes" section below).
+CLI executable depends upon escript, and this has incompatibilities with the
+Timex module (see "Escript Standalone Exes" section below).
 
-By default, mix will run against the provided test data. Output can be redirected
-to an output file in markdown format.
+By default, mix will run against the provided test data. Output can be
+redirected to an output file in markdown format.
 
 >
 > `mix > final_output.md`
