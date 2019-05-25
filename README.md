@@ -90,3 +90,11 @@ The workaround for now is to run mix itself to run the code.
 ## escript References
 
 [Elixir Console Application](https://hackernoon.com/elixir-console-application-with-json-parsing-lets-print-to-console-b701abf1cb14)
+
+## License and Copyright
+
+This work is licenced under the MIT license. See LICENSE.
+
+Some of the code in geometry.exs (Rectangle and Square) was excerpted from
+"Seven More Languages in Seven Weeks", published by The Pragmatic Bookshelf.
+Copyrights apply to this code. It may not be used to create training material, courses, books, articles, and the like.  Visit http://www.pragmaticprogrammer.com/titles/7lang for more book information.
