@@ -4,7 +4,9 @@ ShipSim takes a JSON file containing ship's positions and simulates the ships mo
 
 ## Installation
 
-Install [elixir](https://elixir-lang.org/install.html)
+Install [elixir](https://elixir-lang.org/install.html).
+
+Requires v1.8+ of elixir due to DateTime.add/4. This can and will probably be rewritten to use other parts of DateTime instead of add to make this more backwardly compatible. Meanwhile, the fast way to get up and running is to use [asdf](https://asdf-vm.com) and install a newer version of elixir like so: `asdf install elixir 1.8.2`.
 
 ## Build
 
