@@ -26,6 +26,16 @@ Tested against v1.6.6 of Elixir after backporting DateTime.add/4 to use Unix sec
 > `mix test`
 >
 
+## Bench Test
+
+Get the benchmark data from Google Drive here: https://drive.google.com/open?id=1neWETR0da31QCafdQrlnriIiHfOSiovC
+
+Download all files, install them in the `bench/data` folder, and gunzip them.
+
+>
+> `mix run bench/run_sim_bench.exs`
+>
+
 ## Run
 
 The application is currently run using the mix build tool, as the standalone
