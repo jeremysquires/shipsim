@@ -17,7 +17,12 @@ defmodule ShipSim.DaysRun do
         )
         distance_run = elem(full_days_run, 0)
         hours_run = elem(full_days_run, 2) / 60 / 60
-        speed = distance_run / hours_run
+        speed =
+          if (hours_run == 0) do
+            0
+          else
+		    distance_run / hours_run
+          end
         %{
           :vesselname => vesselname,
           :distance_run => distance_run,
