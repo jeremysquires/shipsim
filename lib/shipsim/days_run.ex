@@ -19,7 +19,7 @@ defmodule ShipSim.DaysRun do
         hours_run = elem(full_days_run, 2) / 60 / 60
         speed =
           if (hours_run == 0) do
-            0
+            0.0
           else
 		    distance_run / hours_run
           end
@@ -46,9 +46,9 @@ defmodule ShipSim.DaysRun do
         IO.puts ""
         IO.puts "### Vessel #{vesselname} run"
         IO.puts ""
-        IO.puts "Run:   #{Float.round(distance_run, 2)|>Float.to_string()} km"
-        IO.puts "Time:  #{Float.round(hours_run,1)|>Float.to_string()} hours"
-        IO.puts "Speed: #{Float.round(speed,2)|>Float.to_string()} km/hr"
+        IO.puts "Run:   #{Float.round(distance_run + 0.0, 2)|>Float.to_string()} km"
+        IO.puts "Time:  #{Float.round(hours_run + 0.0,1)|>Float.to_string()} hours"
+        IO.puts "Speed: #{Float.round(speed + 0.0,2)|>Float.to_string()} km/hr"
       end  
     )
     results

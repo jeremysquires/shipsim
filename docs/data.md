@@ -1,4 +1,22 @@
-# AIS - Automatic Identification System
+# Benchmark Data
+
+In order to exercise the ship simulator on large volumes of realistic data, ships' position data was obtained and it was partitioned into varying levels of load for benchmarking the application.
+
+See the description of AIS below that describes the raw data sources.
+
+The raw data needed to be processed into load test input data for shipsim. The javascript node.js code to create the load test data is here: [geodata](https://github.com/jeremysquires/geodata).
+
+Get the processed benchmark data from Google Drive here: [ShipSimLoadTestData](https://drive.google.com/open?id=1neWETR0da31QCafdQrlnriIiHfOSiovC)
+
+## Bench Test
+
+Process or download the files, install them in the `bench/data` folder, gunzip them if necessary, and then run the bench tests:
+
+>
+> `mix run bench/run_sim_bench.exs`
+>
+
+## AIS - Automatic Identification System
 
 AIS systems record position and other properties of ship movements in real time from low cost broadcasting sensors aboard ships.
 
