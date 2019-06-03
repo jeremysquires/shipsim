@@ -1,22 +1,30 @@
-# Implementing Parallel/Distributed Computation
+# Parallel/Distributed Computation
+
+The initial version of ShipSim was written to process the ships' position data serially, in sequence. The JSON was loaded in a single blob and the code to compute the day's run statistics and the closest point of approach was run in a single process.
+
+This code and this problem lends itself well to being refactored to operate in a parallel or in a distributed way. Computers have multiple CPUs which have multiple cores, and there are even GPUs that can be used to compute in parallel. Multiple hosts can be coordinated to compute parallel results in a distributed way.
+
+## Elixir
 
 In Elixir/erlang there are many options for parallel and distributed
 computation. This is a list of the major types and the primary calls used to
 implement them.
 
-* Process/Node
+* [Process](https://hexdocs.pm/elixir/Process.html)/[Node](https://hexdocs.pm/elixir/Node.html)
     - `Process.spawn/2, get/2, put/2, send/1, receive/1`
     - `Node.spawn/2`
-* Task/Agent
+* [Task](https://hexdocs.pm/elixir/Task.html)/[Agent](https://hexdocs.pm/elixir/Agent.html)
 	- `Task.async/1, Task.yield_many/2`
 	- `Task.async_stream/3`
 	- `Agent.cast/2, Agent.get/3`
-* GenServer
+* [GenServer](https://hexdocs.pm/elixir/GenServer.html)
     - `GenServer.multi_call/4`
-* erlang
+* [Phoenix](https://hexdocs.pm/phoenix)
+    - [Channels](https://hexdocs.pm/phoenix/channels.html)
+* [erlang rpc](http://erlang.org/doc/man/rpc.html)
 	- `:rpc.multicall/4, :rpc.async_call/4, :rpc.yield/2`
 
-## Links
+## Other Links
 
 * [Distributed Tasks](https://elixir-lang.org/getting-started/mix-otp/distributed-tasks-and-configuration.html)
 * [Task](https://elixir-lang.org/getting-started/mix-otp/task-and-gen-tcp.html)
