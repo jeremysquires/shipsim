@@ -38,6 +38,7 @@ defmodule ShipSim.Mixfile do
      {:earmark, "~> 1.3.2", only: :dev},
      {:ex_doc, "~> 0.20.2", only: :dev},
      {:timex, "~> 3.0"},
-     {:scribe, "~> 0.9"}]
+     {:scribe, "~> 0.9"},
+     {:benchee, "~> 1.0", only: :dev}]
   end
 end

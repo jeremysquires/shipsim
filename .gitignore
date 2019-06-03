@@ -2,6 +2,9 @@
 # omit the binary created from mix escript.build
 /shipsim
 
+# bench data
+/bench/data
+
 # ---> Elixir
 # The directory Mix will write compiled artifacts to.
 /_build
