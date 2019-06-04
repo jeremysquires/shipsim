@@ -85,12 +85,15 @@ defmodule ShipSim do
   end
 
   def advance_loop(ship_trackers, timestamp, highest_time, closest_points) when timestamp > highest_time do
+    IO.puts "End Loop :- Timestamp: #{timestamp} > Highest Time: #{highest_time}"
     {:ok, ship_trackers, closest_points}
   end
 
   def advance_loop(ship_trackers, _timestamp, highest_time, closest_points) do
     # advance ships
-    new_ship_trackers = Enum.map(ship_trackers,
+    # TODO: advance ships in parallel
+    new_ship_trackers = Enum.map(
+      ship_trackers,
       fn tracker ->
         ShipSim.Ship.advance(tracker, 60)
       end
@@ -235,26 +238,44 @@ defmodule ShipSim do
       IO.puts "Error : #{inspect vessels}"
       Process.exit(self(), :kill)
     end
+    ships = vessels["vessels"]
+    first_time = List.first(List.first(ships)["positions"])["timestamp"]
     # start time slice at the lowest time
-    # TODO: find the lowest timestamp
-    lowest_time = "2020-01-01T07:40Z"
+    # TODO: find the actual lowest timestamp
+    lowest_time =
+      if (String.starts_with?(first_time, "2020")) do
+        # use lowest time in TestData.json
+        "2020-01-01T07:40Z"
+      else
+        # start at the first day in this month
+        "#{String.slice(first_time, 0..7)}01T00:00Z"
+      end
     # end at the highest time
     # TODO: find the highest timestamp
-    highest_time = "2020-01-01T11:24Z"
+    highest_time =
+      if (String.starts_with?(first_time, "2020")) do
+        # use highest time in TestData.json
+        "2020-01-01T11:24Z"
+      else
+        # highest date possible is the last day in the month (2017-08-31T23:59Z)
+        # "#{String.slice(first_time, 0..7)}31T23:59Z"
+        # only run for a single day initially
+        "#{String.slice(first_time, 0..7)}01T23:59Z"
+      end
     # initialize all ship processes
     # using message passing loop
     # _ships = ShipSim.initSimLoop()
     # using Agent
     # using Task
     # using in memory objects
-    ships = vessels["vessels"]
-    ship_trackers = Enum.map(ships,
+    ship_trackers = Enum.map(
+      ships,
       fn ship ->
         start_position = List.first(ship["positions"])
         ship_tracker =
-          Map.put(ship, :position_index, 0) |>
-          Map.put(:current_time, lowest_time) |>
-          Map.put(:current_position, start_position)
+          Map.put(ship, :position_index, 0)
+          |> Map.put(:current_time, lowest_time)
+          |> Map.put(:current_position, start_position)
         ShipSim.Ship.where(ship_tracker, lowest_time)
       end
     )

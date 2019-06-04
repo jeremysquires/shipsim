@@ -1,6 +1,8 @@
 defmodule ShipSim.DaysRun do
   def days_run(vessels) do
-    Enum.map(vessels["vessels"],
+    # TODO: calculate days run in parallel
+    Enum.map(
+      vessels["vessels"],
       fn vessel ->
         %{"name" => vesselname, "positions" => positions} = vessel
         [firstposition|lastpositions] = positions

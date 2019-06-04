@@ -38,12 +38,14 @@ defmodule ShipSim.CLI do
   end
 
   def parse_args(args) do
-    parse = OptionParser.parse(args, 
-                               switches: [
-                                 help: :boolean,
-                                 file: :string
-                                ],
-                               aliases: [h: :help])
+    parse = OptionParser.parse(
+      args, 
+      switches: [
+        help: :boolean,
+        file: :string
+      ],
+      aliases: [h: :help]
+    )
 
     case parse do
       {[help: true], _, _} -> :help
