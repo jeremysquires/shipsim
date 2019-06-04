@@ -38,6 +38,29 @@ implement them.
       # TODO: calculate days run in parallel
       Enum.map( ...)
 
+## Bench Testing
+
+Read the instructions in `docs/data.md` to get and install the data.
+
+By default the software will run bench tests on only one data set, the smallest one
+having only 10 data points, and for a minimal time period of only one day.
+
+Edit the file `bench/run_sim_bench.exs` and uncomment larger data files in order
+to exercise the software on a larger number of ships.
+
+Edit the file `lib/shipsim.ex` and modify the following line in order
+to exercise the software on a longer time period:
+
+    "#{String.slice(first_time, 0..7)}01T23:59Z"
+
+Run the bench tests and capture the output so that you can see the bench results as
+they are written out to the command line:
+
+>
+> `mix run bench/run_sim_bench.exs > results.log`
+>
+
+
 ## Other Links
 
 * [Distributed Tasks](https://elixir-lang.org/getting-started/mix-otp/distributed-tasks-and-configuration.html)

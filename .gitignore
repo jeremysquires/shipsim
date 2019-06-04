@@ -5,6 +5,9 @@
 # bench data
 /bench/data
 
+# standard result outputs
+results.log
+
 # ---> Elixir
 # The directory Mix will write compiled artifacts to.
 /_build

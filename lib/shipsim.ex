@@ -247,7 +247,7 @@ defmodule ShipSim do
         # use lowest time in TestData.json
         "2020-01-01T07:40Z"
       else
-        # use first day in this month
+        # start at the first day in this month
         "#{String.slice(first_time, 0..7)}01T00:00Z"
       end
     # end at the highest time
@@ -257,8 +257,10 @@ defmodule ShipSim do
         # use highest time in TestData.json
         "2020-01-01T11:24Z"
       else
-        # use last day in this month (2017-08-31T23:59Z)
-        "#{String.slice(first_time, 0..7)}31T23:59Z"
+        # highest date possible is the last day in the month (2017-08-31T23:59Z)
+        # "#{String.slice(first_time, 0..7)}31T23:59Z"
+        # only run for a single day initially
+        "#{String.slice(first_time, 0..7)}01T23:59Z"
       end
     # initialize all ship processes
     # using message passing loop
