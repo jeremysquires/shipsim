@@ -15,7 +15,7 @@ Benchee.run(
     "pos_1k" => "bench/data/pos1000.json",
     "pos_10k" => "bench/data/pos10000.json",
     "pos_100k" => "bench/data/pos100000.json",
-    # "pos_1M" => "bench/data/pos1000000.json",
+    "pos_1M" => "bench/data/pos1000000.json",
     # "pos_10M" => "bench/data/pos10000000.json",
     # "pos_20M" => "bench/data/pos20000000.json"
   }

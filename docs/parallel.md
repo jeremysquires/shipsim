@@ -24,6 +24,20 @@ implement them.
 * [erlang rpc](http://erlang.org/doc/man/rpc.html)
 	- `:rpc.multicall/4, :rpc.async_call/4, :rpc.yield/2`
 
+## ShipSim Parallel Touch Points
+
+* `shipsim\lib\shipsim.ex`
+    def advance_loop(ship_trackers, _timestamp, highest_time, closest_points) do
+      # advance ships
+      # TODO: advance ships in parallel
+      new_ship_trackers = Enum.map( ... )
+
+* `shipsim\lib\shipsim\days_run.ex`
+
+    def days_run(vessels) do
+      # TODO: calculate days run in parallel
+      Enum.map( ...)
+
 ## Other Links
 
 * [Distributed Tasks](https://elixir-lang.org/getting-started/mix-otp/distributed-tasks-and-configuration.html)
