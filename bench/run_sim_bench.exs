@@ -44,3 +44,24 @@ Benchee.run(
 # inputs: pos_1M
 # Estimated total run time: 7 s
 
+# Test results from 64 bit laptop : 1 million positions
+#
+# Benchmarking serial with input pos_1M...
+#
+##### With input pos_1M #####
+# Name             ips        average  deviation         median         99th %
+# serial       0.00063      26.58 min     ±0.00%      26.58 min      26.58 min
+# Operating System: Windows
+# CPU Information: Intel(R) Core(TM) i7-3630QM CPU @ 2.40GHz
+# Number of Available Cores: 8
+# Available memory: 15.89 GB
+# Elixir 1.8.1
+# Erlang 21.2
+# 
+# Benchmark suite executing with the following configuration:
+# warmup: 2 s
+# time: 5 s
+# memory time: 0 ns
+# parallel: 1
+# inputs: pos_1M
+# Estimated total run time: 7 s
