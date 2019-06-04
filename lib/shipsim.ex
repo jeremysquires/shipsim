@@ -161,6 +161,7 @@ defmodule ShipSim do
     # IO.puts "#{inspect closest_points}"
     # Enum.each(closest_points, &(Scribe.print(&1, colorize: false)))
     IO.puts "# Closest Points of Approach"
+    IO.puts "To display: #{length(closest_points)} closest points"
     IO.puts ""
     Enum.each(closest_points,
       fn closest ->
@@ -222,6 +223,7 @@ defmodule ShipSim do
         )
       end
     )
+    IO.puts "# End of Closest Points Listing"
   end
 
   @doc """
