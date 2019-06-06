@@ -89,15 +89,50 @@ defmodule ShipSim do
     {:ok, ship_trackers, closest_points}
   end
 
-  def advance_loop(ship_trackers, _timestamp, highest_time, closest_points) do
+  def advance_loop(ship_trackers, _timestamp, highest_time, closest_points, method \\ "task") do
     # advance ships
     # TODO: advance ships in parallel
-    new_ship_trackers = Enum.map(
-      ship_trackers,
-      fn tracker ->
-        ShipSim.Ship.advance(tracker, 60)
+    new_ship_trackers =
+      if (method == "task") do
+        tasks = Enum.map(
+          ship_trackers,
+          fn tracker ->
+            Task.async(
+              fn ->
+                ShipSim.Ship.advance(tracker, 60)
+              end
+            )
+          end
+        )
+        completedTasks = Task.yield_many(tasks, :infinity)
+        results = Enum.map(
+          completedTasks,
+          fn { task, result } ->
+            result || Task.shutdown(task, :brutal_kill)
+          end
+        )
+        Enum.map(
+          results,
+          fn result ->
+            case result do
+              { :ok, res } ->
+                res
+              { :exit, reason } ->
+                %{ current_position: nil, position_index: nil, current_time: nil, error: reason }
+              _ ->
+                %{ current_position: nil, position_index: nil, current_time: nil, error: "unknown error" }
+            end
+          end
+        )    
+      else
+        # do it serially
+        Enum.map(
+          ship_trackers,
+          fn tracker ->
+            ShipSim.Ship.advance(tracker, 60)
+          end
+        )
       end
-    )
     # find the ranges between all ships
     ranges = all_ranges(new_ship_trackers, [])
     # find the closest points of approach

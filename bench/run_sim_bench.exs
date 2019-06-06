@@ -32,6 +32,16 @@ Benchee.run(
 # Erlang 21.2
 #
 ##### With input pos_100k #####
+# After task-parallel advance() time slices (??slower)
+# Name             ips        average  deviation         median         99th %
+# task         0.00812       2.05 min     ±0.00%       2.05 min       2.05 min
+# serial       0.00727       2.29 min     ±0.00%       2.29 min       2.29 min
+# 
+# Comparison:
+# task         0.00812
+# serial       0.00727 - 1.12x slower +0.24 min
+#
+# After task-parallel days_run()
 # Name             ips        average  deviation         median         99th %
 # task          0.0179       0.93 min     Â±0.00%       0.93 min       0.93 min
 # serial        0.0147       1.14 min     Â±0.00%       1.14 min       1.14 min
