@@ -119,10 +119,10 @@ defmodule ShipSim do
     {:ok, self()}
   end
 
-  def final_output(vessels, end_trackers, closest_points) do
+  def final_output(vessels, end_trackers, closest_points, method \\ "task") do
     # output distance and speed for all ships
     IO.puts "# Ship Run Statistics"
-    runs = ShipSim.DaysRun.days_run_out(vessels)
+    runs = ShipSim.DaysRun.days_run_out(vessels, method)
     average_speed = Enum.reduce(runs, 0, &( &1.speed + &2)) / length(runs)
     # output end state
     # IO.puts "#{inspect end_trackers}"
@@ -231,7 +231,7 @@ defmodule ShipSim do
 
   TODO: remove the default or don't call with missing args
   """
-  def run_sim(file_name \\ "test/TestData.json") do
+  def run_sim(file_name \\ "test/TestData.json", method \\ "task") do
     # TODO: pattern match against :ok and :error
     {result, vessels} = ShipSim.JSONFetch.fetch(file_name)
     if (result == :error) do
@@ -286,7 +286,7 @@ defmodule ShipSim do
     {:ok, end_trackers, closest_points} =
       advance_loop(ship_trackers, lowest_time, highest_time, [])
     # print output
-    final_output(vessels, end_trackers, closest_points)
+    final_output(vessels, end_trackers, closest_points, method)
   end
 
 end
