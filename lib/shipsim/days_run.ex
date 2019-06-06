@@ -1,6 +1,6 @@
 defmodule ShipSim.DaysRun do
   def days_run(vessels) do
-    # TODO: calculate days run in parallel
+    # days run in parallel using tasks
     tasks = Enum.map(
       vessels["vessels"],
       fn vessel ->
