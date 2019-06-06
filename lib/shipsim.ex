@@ -39,32 +39,98 @@ defmodule ShipSim do
     _lowest_time = "2020-01-01T07:40Z"
   end
 
-  def all_ranges([ownship|others], results) do
-    # compute ranges
-    new_ranges = Enum.map(others,
-      fn target ->
-        %{
-          range: range,
-          bearing: bearing
-        } = ShipSim.Ship.range_and_bearing(ownship, target)
-        # TODO: add reciprocal bearing from target back to ownship
-        # TODO: add check for crossing of these two legs
-        %{
-          ownship: ownship["name"],
-          target: target["name"],
-          time: target[:current_time],
-          own_position: ownship[:current_position],
-          trg_position: target[:current_position],
-          range: range,
-          bearing: bearing
-        }
+  def all_ranges([ownship|others], results, method) do
+    # compute range and bearing
+    # TODO: range and bearing in parallel
+    new_ranges =
+      if (false) do # method == "task" DISABLE - slows down extremely
+        tasks = Enum.map(
+          others,
+          fn target ->
+            Task.async(
+              fn ->
+                %{
+                  range: range,
+                  bearing: bearing
+                } = ShipSim.Ship.range_and_bearing(ownship, target)
+                # TODO: add reciprocal bearing from target back to ownship
+                # TODO: add check for crossing of these two legs
+                %{
+                  ownship: ownship["name"],
+                  target: target["name"],
+                  time: target[:current_time],
+                  own_position: ownship[:current_position],
+                  trg_position: target[:current_position],
+                  range: range,
+                  bearing: bearing
+                }
+              end
+            )
+          end
+        )
+        completedTasks = Task.yield_many(tasks, :infinity)
+        results = Enum.map(
+          completedTasks,
+          fn { task, result } ->
+            result || Task.shutdown(task, :brutal_kill)
+          end
+        )
+        Enum.map(
+          results,
+          fn result ->
+            case result do
+              { :ok, res } ->
+                res
+              { :exit, reason } ->
+                %{
+                  ownship: ownship["name"],
+                  target: reason,
+                  time: "",
+                  own_position: ownship[:current_position],
+                  trg_position: ownship[:current_position],
+                  range: 0.0,
+                  bearing: 0.0
+                }
+              _ ->
+                %{
+                  ownship: ownship["name"],
+                  target: "unkown error",
+                  time: "",
+                  own_position: ownship[:current_position],
+                  trg_position: ownship[:current_position],
+                  range: 0.0,
+                  bearing: 0.0
+                }
+            end
+          end
+        )    
+      else
+        Enum.map(
+          others,
+          fn target ->
+            %{
+              range: range,
+              bearing: bearing
+            } = ShipSim.Ship.range_and_bearing(ownship, target)
+            # TODO: add reciprocal bearing from target back to ownship
+            # TODO: add check for crossing of these two legs
+            %{
+              ownship: ownship["name"],
+              target: target["name"],
+              time: target[:current_time],
+              own_position: ownship[:current_position],
+              trg_position: target[:current_position],
+              range: range,
+              bearing: bearing
+            }
+          end
+        )
       end
-    )
     # add to results
     new_results = results ++ new_ranges
-    all_ranges(others, new_results)
+    all_ranges(others, new_results, method)
   end
-  def all_ranges(_, results) do
+  def all_ranges(_, results, _method) do
     # last ship has been compared to all the others
     results
   end
@@ -89,17 +155,51 @@ defmodule ShipSim do
     {:ok, ship_trackers, closest_points}
   end
 
-  def advance_loop(ship_trackers, _timestamp, highest_time, closest_points) do
-    # advance ships
-    # TODO: advance ships in parallel
-    new_ship_trackers = Enum.map(
-      ship_trackers,
-      fn tracker ->
-        ShipSim.Ship.advance(tracker, 60)
+  def advance_loop(ship_trackers, _timestamp, highest_time, closest_points, method \\ "task") do
+    # advance ships, parallel and serial
+    new_ship_trackers =
+      if (false) do # method == "task" DISABLE - doubles execution time
+        tasks = Enum.map(
+          ship_trackers,
+          fn tracker ->
+            Task.async(
+              fn ->
+                ShipSim.Ship.advance(tracker, 60)
+              end
+            )
+          end
+        )
+        completedTasks = Task.yield_many(tasks, :infinity)
+        results = Enum.map(
+          completedTasks,
+          fn { task, result } ->
+            result || Task.shutdown(task, :brutal_kill)
+          end
+        )
+        Enum.map(
+          results,
+          fn result ->
+            case result do
+              { :ok, res } ->
+                res
+              { :exit, reason } ->
+                %{ current_position: nil, position_index: nil, current_time: nil, error: reason }
+              _ ->
+                %{ current_position: nil, position_index: nil, current_time: nil, error: "unknown error" }
+            end
+          end
+        )    
+      else
+        # do it serially
+        Enum.map(
+          ship_trackers,
+          fn tracker ->
+            ShipSim.Ship.advance(tracker, 60)
+          end
+        )
       end
-    )
     # find the ranges between all ships
-    ranges = all_ranges(new_ship_trackers, [])
+    ranges = all_ranges(new_ship_trackers, [], method)
     # find the closest points of approach
     new_closest_points = update_closest_points(closest_points, ranges)
     new_timestamp = List.first(new_ship_trackers)[:current_time]

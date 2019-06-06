@@ -11,26 +11,30 @@ computation. This is a list of the major types and the primary calls used to
 implement them.
 
 * [Process](https://hexdocs.pm/elixir/Process.html)/[Node](https://hexdocs.pm/elixir/Node.html)
-    - `Process.spawn/2, get/2, put/2, send/1, receive/1`
-    - `Node.spawn/2`
+  * `Process.spawn/2, get/2, put/2, send/1, receive/1`
+  * `Node.spawn/2`
 * [Task](https://hexdocs.pm/elixir/Task.html)/[Agent](https://hexdocs.pm/elixir/Agent.html)
-	- `Task.async/1, Task.yield_many/2`
-	- `Task.async_stream/3`
-	- `Agent.cast/2, Agent.get/3`
+  * `Task.async/1, Task.yield_many/2`
+  * `Task.async_stream/3`
+  * `Agent.cast/2, Agent.get/3`
 * [GenServer](https://hexdocs.pm/elixir/GenServer.html)
-    - `GenServer.multi_call/4`
+  * `GenServer.multi_call/4`
 * [Phoenix](https://hexdocs.pm/phoenix)
-    - [Channels](https://hexdocs.pm/phoenix/channels.html)
+  * [Channels](https://hexdocs.pm/phoenix/channels.html)
 * [erlang rpc](http://erlang.org/doc/man/rpc.html)
-	- `:rpc.multicall/4, :rpc.async_call/4, :rpc.yield/2`
+  * `:rpc.multicall/4, :rpc.async_call/4, :rpc.yield/2`
 
 ## ShipSim Parallel Touch Points
 
 * `shipsim\lib\shipsim.ex`
     def advance_loop(ship_trackers, _timestamp, highest_time, closest_points) do
-      # advance ships
       # TODO: advance ships in parallel
       new_ship_trackers = Enum.map( ... )
+
+    def all_ranges([ownship|others], results, method) do
+      # compute range and bearing
+      # TODO: range and bearing in parallel
+      new_ranges = Enum.map( ... )
 
 * `shipsim\lib\shipsim\days_run.ex`
 

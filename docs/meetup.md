@@ -1,4 +1,5 @@
-Tuesday, June 4, 2019
+# Tuesday, June 4, 2019
+
 [Hands-on with Elixir!](https://www.meetup.com/Elixir-Calgary/events/261665388/)
 Hosted by Jonathan and 2 others
 
@@ -35,5 +36,3 @@ In this hands-on coding workshop, we'll:
 3. Generate test data to exercise the simulator
 4. Implement concurrent processing of ship movements
 5. Measure the running times of different implementations
-
-

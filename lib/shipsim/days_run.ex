@@ -95,7 +95,7 @@ defmodule ShipSim.DaysRun do
     )
   end
 
-  def days_run(vessels, method) do
+  def days_run(vessels, method \\ "task") do
     case method do
       "serial" ->
         days_run_serial(vessels)
